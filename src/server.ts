@@ -24,22 +24,22 @@ const options = {
     customSiteTitle: "Documentación Mono", // Aquí es donde especificas el nuevo título
 };
 
-app.app.set("port", process.env.PORT || 3000);
-app.app.set("views", path.join(__dirname, "../../views"));
-app.app.set("view engine", "pug");
-app.app.set("env", process.env.APP_MODE || "production");
-app.app.use("/documentation", swaggerUi.serve, swaggerUi.setup(swaggerSetup, options));
-app.app.use(cors({ origin: true, credentials: true }));
-app.app.use(bodyParser.json());
-app.app.use(bodyParser.urlencoded({ extended: true }));
-app.app.use(passport.initialize());
+app.server.set("port", process.env.PORT || 3000);
+app.server.set("views", path.join(__dirname, "../../views"));
+app.server.set("view engine", "pug");
+app.server.set("env", process.env.APP_MODE || "production");
+app.server.use("/documentation", swaggerUi.serve, swaggerUi.setup(swaggerSetup, options));
+app.server.use(cors({ origin: true, credentials: true }));
+app.server.use(bodyParser.json());
+app.server.use(bodyParser.urlencoded({ extended: true }));
+app.server.use(passport.initialize());
 
 
-app.app.use(paths.home, API_ROUTER.homeRouter);
-app.app.use(paths.user, API_ROUTER.userRouter);
+app.server.use(paths.home, API_ROUTER.homeRouter);
+app.server.use(paths.user, API_ROUTER.userRouter);
 
-const server = app.app.listen(app.app.get("port"), () => {
-    console.log("App is runnig at http://localhost:%d in %s mode", app.app.get("port"), app.app.get("env"));
+const server = app.server.listen(app.server.get("port"), () => {
+    console.log("App is runnig at http://localhost:%d in %s mode", app.server.get("port"), app.server.get("env"));
     console.log(" Press CTRL-C to stop\n");
 },);
 

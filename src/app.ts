@@ -8,15 +8,15 @@ export default class App {
 
   private static _intance: App;
 
-  public app: express.Application;
+  public server: express.Application;
   public port: number;
 
   public io: SocketIOServer;
   private httpServer: http.Server;
 
   private constructor(){
-    this.app = express();
-    this.port = this.app.get("port"); 
+    this.server = express();
+    this.port = this.server.get("port"); 
 
     this.httpServer = new http.Server(this.app);
     this.io = new SocketIOServer(this.httpServer);
