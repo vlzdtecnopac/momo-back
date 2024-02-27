@@ -2,12 +2,7 @@
 name: CI-CD
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch: null
+    branches: [ "main" ]
 jobs:
   build_test:
     runs-on: ubuntu-latest
