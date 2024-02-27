@@ -57,7 +57,7 @@ jobs:
             echo "runing the docker image"
             echo "Testing the nodejs app endpoints"
             echo ${{ steps.docker_build.outputs.digest }}
-  publish_amamzon:
+  publish_aws_amazon:
     runs-on: self-hosted
     needs:
       - build_test
