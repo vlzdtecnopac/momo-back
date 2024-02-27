@@ -16,7 +16,7 @@ export default class App {
 
   private constructor(){
     this.app = express();
-    this.port = 3000; // Replace with the actual SERVER_PORT value or import it
+    this.port = this.app.get("port"); 
 
     this.httpServer = new http.Server(this.app);
     this.io = new SocketIOServer(this.httpServer);
