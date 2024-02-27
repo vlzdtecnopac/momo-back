@@ -3,13 +3,7 @@ services:
   web:
     build: .
     environment:
+      PORT: 3006
       NODE_ENV: production
-      APP_NAME: "NodeJS - API"
-      APP_MODE: production
-      DB_HOST: "database-2.cdy3ggwtst1p.us-east-1.rds.amazonaws.com"
-      DB_PORT: 3000
-      DB_USERNAME: admin
-      DB_PASSWORD: atenea1989
-      DB_NAME: form
     ports:
-      - "3000:3000"
+      - "3006:3006"
