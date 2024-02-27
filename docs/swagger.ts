@@ -8,7 +8,7 @@ const swaggerDefinition: OAS3Definition = {
   },
   servers: [
     {
-      url: "http://localhost:3000",
+      url: "http://ec2-54-167-254-121.compute-1.amazonaws.com",
     },
   ],
   components: {
