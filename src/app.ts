@@ -1,42 +1,45 @@
 import express from "express";
-import bodyParser from "body-parser";
-import passport from "passport";
-import path from "path";
-import dotenv from "dotenv";
-import swaggerUi from "swagger-ui-express";
-import swaggerSetup from "./../docs/swagger";
-import cors from "cors";
-import {API_ROUTER} from "./routes";
-
-const app =  express();
-
-dotenv.config({path: ".env"});
-
-export const paths = {
-    home:       "/",
-    user:       "/user",
-};
-
-console.log(__dirname);
+import { Server as SocketIOServer } from "socket.io";
+import http from "http";
 
 
-const options = {
-    customSiteTitle: "Documentación Mono", // Aquí es donde especificas el nuevo título
-  };
 
-app.set("port", process.env.PORT || 3000);
-app.set("views", path.join(__dirname, "../../views"));
-app.set("view engine", "pug");
-app.set("env", process.env.APP_MODE || "production");
-app.use("/documentation",swaggerUi.serve, swaggerUi.setup(swaggerSetup, options));
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(passport.initialize());
+export default class App {
+
+  private static _intance: App;
+
+  public app: express.Application;
+  public port: number;
+
+  public io: SocketIOServer;
+  private httpServer: http.Server;
+
+  private constructor(){
+    this.app = express();
+    this.port = 3000; // Replace with the actual SERVER_PORT value or import it
+
+    this.httpServer = new http.Server(this.app);
+    this.io = new SocketIOServer(this.httpServer);
+
+    this.listeningSockets();
+  }
+
+  public static get instance() {
+    return this._intance || ( this._intance = new this() );
+  }
+
+  private listeningSockets(){
+    console.log("Listening Sockets IO");
+    this.io.on("connection", cliente => {
+         console.log(`Client connected: ${cliente.id}`);
+    });
+  }
+
+  start(callback: any) {
+    this.httpServer.listen(this.port, callback);
+  }
+}
 
 
-app.use( paths.home, API_ROUTER.homeRouter);
-app.use( paths.user, API_ROUTER.userRouter);
 
 
-export default app;
