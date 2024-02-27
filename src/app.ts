@@ -18,7 +18,7 @@ export default class App {
     this.server = express();
     this.port = this.server.get("port"); 
 
-    this.httpServer = new http.Server(this.app);
+    this.httpServer = new http.Server(this.server);
     this.io = new SocketIOServer(this.httpServer);
 
     this.listeningSockets();
