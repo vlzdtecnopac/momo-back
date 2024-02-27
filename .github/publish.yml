@@ -84,6 +84,8 @@ jobs:
   publish_amamzon:
       runs-on: self-hosted
 
+      needs: [build_test, push_to_Docker_Hub]
+
       steps:
         - name: Pull Docker image
           run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/cicd-pipeline:latest
