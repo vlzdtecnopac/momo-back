@@ -40,8 +40,16 @@ const server = http.createServer(app);
 
 dotenv.config({path: ".env"});
 
+const ioOptions = {
+  // options go here
+  cors: {
+    origin: "http://127.0.0.1:5173",
+    methods: ["GET", "POST"]
+  }
+};
+
 // Create a Socket.IO instance attached to the server
-const io = new socketIO.Server(server);
+const io = new socketIO.Server(server, ioOptions);
 
 // Set up a connection event handler for new socket connections
 io.on("connection", (socket) => {
