@@ -40,7 +40,6 @@ const server = http.createServer(app);
 
 dotenv.config({path: ".env"});
 
-
 // Create a Socket.IO instance attached to the server
 const io = new socketIO.Server(server);
 
@@ -60,6 +59,5 @@ io.on("connection", (socket) => {
       console.log("User disconnected");
   });
 });
-
 
 export default server;
