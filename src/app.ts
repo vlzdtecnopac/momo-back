@@ -45,7 +45,7 @@ const io = new socketIO.Server(server);
 
 // Set up a connection event handler for new socket connections
 io.on("connection", (socket) => {
-  console.log("A user connected");
+  console.log("User connected 🎉");
 
   // Handle custom events or messages from the client
   socket.on("chat message", (msg) => {
@@ -56,7 +56,7 @@ io.on("connection", (socket) => {
 
   // Handle disconnection event
   socket.on("disconnect", () => {
-      console.log("User disconnected");
+      console.log("User disconnected 😥");
   });
 });
 
