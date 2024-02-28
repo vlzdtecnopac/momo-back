@@ -7,22 +7,20 @@ import swaggerUi from "swagger-ui-express";
 import swaggerSetup from "./../docs/swagger";
 import cors from "cors";
 import {API_ROUTER} from "./routes";
-
-const app =  express();
-
-dotenv.config({path: ".env"});
+import * as http from "http";
+import * as socketIO from "socket.io";
 
 export const paths = {
-    home:       "/",
-    user:       "/user",
+  home:       "/",
+  user:       "/user",
 };
 
-console.log(__dirname);
-
-
 const options = {
-    customSiteTitle: "Documentación Mono", // Aquí es donde especificas el nuevo título
-  };
+  customSiteTitle: "Documentación Mono", // Aquí es donde especificas el nuevo título
+};
+
+// Create an Express application
+const app = express();
 
 app.set("port", process.env.PORT || 3000);
 app.set("views", path.join(__dirname, "../../views"));
@@ -38,5 +36,30 @@ app.use(passport.initialize());
 app.use( paths.home, API_ROUTER.homeRouter);
 app.use( paths.user, API_ROUTER.userRouter);
 
+const server = http.createServer(app);
 
-export default app;
+dotenv.config({path: ".env"});
+
+
+// Create a Socket.IO instance attached to the server
+const io = new socketIO.Server(server);
+
+// Set up a connection event handler for new socket connections
+io.on("connection", (socket) => {
+  console.log("A user connected");
+
+  // Handle custom events or messages from the client
+  socket.on("chat message", (msg) => {
+      console.log(`Message from client: ${msg}`);
+      // Broadcast the message to all connected clients
+      io.emit("chat message", msg);
+  });
+
+  // Handle disconnection event
+  socket.on("disconnect", () => {
+      console.log("User disconnected");
+  });
+});
+
+
+export default server;

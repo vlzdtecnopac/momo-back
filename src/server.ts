@@ -1,8 +1,8 @@
-import app from "./app";
+import server from "./app";
 
-const server = app.listen(app.get("port"),()=>{
-    console.log("App is runnig at http://localhost:%d in %s mode", app.get("port"), app.get("env"));
+const global = server.listen(3000,()=>{
+    console.log("App is runnig at http://localhost:%d in %s mode", 3000, "production");
     console.log(" Press CTRL-C to stop\n");
 },);
 
-export default server;
+export default global;
