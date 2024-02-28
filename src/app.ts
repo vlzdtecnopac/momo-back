@@ -1,45 +1,63 @@
 import express from "express";
-import { Server as SocketIOServer } from "socket.io";
-import http from "http";
+import bodyParser from "body-parser";
+import passport from "passport";
+import path from "path";
+import dotenv from "dotenv";
+import swaggerUi from "swagger-ui-express";
+import swaggerSetup from "./../docs/swagger";
+import cors from "cors";
+import {API_ROUTER} from "./routes";
+import * as http from "http";
+import * as socketIO from "socket.io";
+
+export const paths = {
+  home:       "/",
+  user:       "/user",
+};
+
+const options = {
+  customSiteTitle: "Documentación Mono", // Aquí es donde especificas el nuevo título
+};
+
+// Create an Express application
+const app = express();
+
+app.set("port", process.env.PORT || 3000);
+app.set("views", path.join(__dirname, "../../views"));
+app.set("view engine", "pug");
+app.set("env", process.env.APP_MODE || "production");
+app.use("/documentation",swaggerUi.serve, swaggerUi.setup(swaggerSetup, options));
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(passport.initialize());
 
 
+app.use( paths.home, API_ROUTER.homeRouter);
+app.use( paths.user, API_ROUTER.userRouter);
 
-export default class App {
+const server = http.createServer(app);
 
-  private static _intance: App;
+dotenv.config({path: ".env"});
 
-  public server: express.Application;
-  public port: number;
+// Create a Socket.IO instance attached to the server
+const io = new socketIO.Server(server);
 
-  public io: SocketIOServer;
-  private httpServer: http.Server;
+// Set up a connection event handler for new socket connections
+io.on("connection", (socket) => {
+  console.log("A user connected");
 
-  private constructor(){
-    this.server = express();
-    this.port = this.server.get("port"); 
+  // Handle custom events or messages from the client
+  socket.on("chat message", (msg) => {
+      console.log(`Message from client: ${msg}`);
+      // Broadcast the message to all connected clients
+      io.emit("chat message", msg);
+  });
 
-    this.httpServer = new http.Server(this.server);
-    this.io = new SocketIOServer(this.httpServer);
+  // Handle disconnection event
+  socket.on("disconnect", () => {
+      console.log("User disconnected");
+  });
+});
 
-    this.listeningSockets();
-  }
-
-  public static get instance() {
-    return this._intance || ( this._intance = new this() );
-  }
-
-  private listeningSockets(){
-    console.log("Listening Sockets IO");
-    this.io.on("connection", cliente => {
-         console.log(`Client connected: ${cliente.id}`);
-    });
-  }
-
-  start(callback: any) {
-    this.httpServer.listen(this.port, callback);
-  }
-}
-
-
-
-
+export default server;
