@@ -48,7 +48,7 @@ if (process.env.NODE_ENV === "development") {
 const ioOptions = {
   // options go here
   cors: {
-    origin: "http://127.0.0.1:5173",
+    origin: process.env.REACT_APP_FROND_URL,
     methods: ["GET", "POST"]
   }
 };
