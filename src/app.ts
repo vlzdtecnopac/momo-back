@@ -43,7 +43,7 @@ dotenv.config({path: ".env"});
 const ioOptions = {
   // options go here
   cors: {
-    origin: "https://main.d11mnl7rsxyx0t.amplifyapp.com",
+    origin: ["https://main.d11mnl7rsxyx0t.amplifyapp.com", "http://localhost:3000",  "http://127.0.0.1:3000"],
     methods: ["GET", "POST"]
   }
 };
