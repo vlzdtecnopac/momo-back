@@ -6,71 +6,105 @@ import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import swaggerSetup from "./../docs/swagger";
 import cors from "cors";
-import {API_ROUTER} from "./routes";
+import { API_ROUTER } from "./routes";
 import * as http from "http";
 import * as socketIO from "socket.io";
 
 export const paths = {
-  home:       "/",
-  user:       "/user",
+  home: "/",
+  user: "/user",
 };
 
-const options = {
-  customSiteTitle: "Documentación Mono", // Aquí es donde especificas el nuevo título
-};
 
-// Create an Express application
-const app = express();
+class Server {
 
-app.set("port", process.env.PORT || 3000);
-app.set("views", path.join(__dirname, "../../views"));
-app.set("view engine", "pug");
-app.set("env", process.env.APP_MODE || "production");
-app.use("/documentation",swaggerUi.serve, swaggerUi.setup(swaggerSetup, options));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(cors({origin: true, credentials: true}));
-app.use(passport.initialize());
+  private static _instance: Server;
+
+  private app;
+  private server;
+  public io;
+  private ioOptions = {
+    // options go here
+    cors: {
+      origin: process.env.REACT_APP_FROND_URL,
+      methods: ["GET", "POST"]
+    }
+  };
 
 
-app.use( paths.home, API_ROUTER.homeRouter);
-app.use( paths.user, API_ROUTER.userRouter);
+  private options = {
+    customSiteTitle: "Documentación Mono", // Aquí es donde especificas el nuevo título
+  };
 
-const Server = http.createServer(app);
+  constructor() {
+    this.app = express();
+    this.server = http.createServer(this.app);
+    this.io = new socketIO.Server(this.server, this.ioOptions);
+    this.initConfig();
+    this.socketConfig();
+  }
 
-if (process.env.NODE_ENV === "development") {
-  dotenv.config({ path: ".env.development" });
-} else if (process.env.NODE_ENV === "production") {
-  dotenv.config({ path: ".env.production" });
+  public static get instance(){
+    return this._instance || (this._instance = new this());
+  }
+
+
+  initConfig() {
+    this.app.set("port", process.env.PORT || 3000);
+    this.app.set("views", path.join(__dirname, "../../views"));
+    this.app.set("view engine", "pug");
+    this.app.set("env", process.env.APP_MODE || "production");
+    this.app.use("/documentation", swaggerUi.serve, swaggerUi.setup(swaggerSetup, this.options));
+    this.app.use(bodyParser.json());
+    this.app.use(bodyParser.urlencoded({ extended: true }));
+    this.app.use(cors({ origin: true, credentials: true }));
+    this.app.use(passport.initialize());
+    this.app.use(paths.home, API_ROUTER.homeRouter);
+    this.app.use(paths.user, API_ROUTER.userRouter);
+
+    if (process.env.NODE_ENV === "development") {
+      dotenv.config({ path: ".env.development" });
+    } else if (process.env.NODE_ENV === "production") {
+      dotenv.config({ path: ".env.production" });
+    }
+
+  }
+
+  socketConfig() {
+    // Set up a connection event handler for new socket connections
+    this.io.on("connection", (socket) => {
+      console.log(`User ID Socket: ${socket.id}`);
+      console.log("User connected 🎉");
+
+      // Handle custom events or messages from the client
+      socket.on("chat message", (msg) => {
+        // Broadcast the message to all connected clients
+        this.io.emit("chat message", msg);
+      });
+
+      // Handle disconnection event
+      socket.on("disconnect", () => {
+        console.log("User disconnected 😥");
+      });
+    });
+  }
+
+  start(){
+    this.server.listen(process.env.PORT,()=>{
+      console.log("App is runnig at http://localhost:%d in %s mode", process.env.PORT, process.env.NODE_ENV);
+      console.log(" Press CTRL-C to stop\n");
+  },);
+  }
+
 }
 
 
-const ioOptions = {
-  // options go here
-  cors: {
-    origin: process.env.REACT_APP_FROND_URL,
-    methods: ["GET", "POST"]
-  }
-};
 
-// Create a Socket.IO instance attached to the server
-export const io = new socketIO.Server(Server, ioOptions);
 
-// Set up a connection event handler for new socket connections
-io.on("connection", (socket) => {
-  console.log(`User ID Socket: ${socket.id}`);
-  console.log("User connected 🎉");
-  
-  // Handle custom events or messages from the client
-  socket.on("chat message", (msg) => {
-      // Broadcast the message to all connected clients
-      io.emit("chat message", msg);
-  });
 
-  // Handle disconnection event
-  socket.on("disconnect", () => {
-      console.log("User disconnected 😥");
-  });
-});
+
+
+
+
 
 export default Server;

@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { UserType } from "./../types/user.type";
-import Server, { io } from "../app";
+import Server from "../app";
 
 const router = express.Router();
 
@@ -34,7 +34,7 @@ router.get("/users", (req: Request, res: Response) => {
       avatar: "http://",
     },
   ];
-  io.emit("mensaje-welcome", "Hola David desde server");
+  Server.instance.io.emit("mensaje-welcome", "Hola David desde server");
   res.send({ data });
 });
 
@@ -62,7 +62,7 @@ router.get("/users", (req: Request, res: Response) => {
  */
 router.post("/users", (req: Request, res: Response) => {
   const { body } = req;
-  io.emit("mensaje-welcome", "Hola David desde server");
+  Server.instance.io.emit("mensaje-welcome", "Hola David desde server");
 
   res.send({ data: body });
 });
