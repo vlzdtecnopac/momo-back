@@ -38,7 +38,12 @@ app.use( paths.user, API_ROUTER.userRouter);
 
 const server = http.createServer(app);
 
-dotenv.config({path: ".env"});
+if (process.env.NODE_ENV === "development") {
+  dotenv.config({ path: ".env.development" });
+} else if (process.env.NODE_ENV === "production") {
+  dotenv.config({ path: ".env.production" });
+}
+
 
 const ioOptions = {
   // options go here

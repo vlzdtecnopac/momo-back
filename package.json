@@ -4,8 +4,8 @@
   "description": "Este el backend service de momo",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build && node dist/src/server -e .env.production ",
-    "dev": "npm run build && node dist/src/server -e .env.development ",
+    "start": "npm run build && NODE_ENV=production node dist/src/server",
+    "dev": "npm run build &&  NODE_ENV=development node dist/src/server ",
     "lint": "tsc --noEmit && eslint \"**/*.{js,ts}\" --quiet --fix",
     "build-ts": "tsc",
     "build": "rm -rf dist/ && npm run build-ts && npm run lint",
