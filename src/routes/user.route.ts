@@ -1,11 +1,12 @@
 import express, { Request, Response } from "express";
 import { UserType } from "./../types/user.type";
+import Server, { io } from "../app";
 
 const router = express.Router();
 
 /**
  * @swagger
- * /users:
+ * /user/users:
  *   get:
  *     summary: Obtener Lista de usuarios
  *     tags: 
@@ -33,7 +34,7 @@ router.get("/users", (req: Request, res: Response) => {
       avatar: "http://",
     },
   ];
-
+  io.emit("mensaje-welcome", "Hola David desde server");
   res.send({ data });
 });
 
@@ -61,7 +62,8 @@ router.get("/users", (req: Request, res: Response) => {
  */
 router.post("/users", (req: Request, res: Response) => {
   const { body } = req;
-  console.log(body);
+  io.emit("mensaje-welcome", "Hola David desde server");
+
   res.send({ data: body });
 });
 export default router;

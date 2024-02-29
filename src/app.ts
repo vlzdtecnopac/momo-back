@@ -27,16 +27,16 @@ app.set("views", path.join(__dirname, "../../views"));
 app.set("view engine", "pug");
 app.set("env", process.env.APP_MODE || "production");
 app.use("/documentation",swaggerUi.serve, swaggerUi.setup(swaggerSetup, options));
-app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cors({origin: true, credentials: true}));
 app.use(passport.initialize());
 
 
 app.use( paths.home, API_ROUTER.homeRouter);
 app.use( paths.user, API_ROUTER.userRouter);
 
-const server = http.createServer(app);
+const Server = http.createServer(app);
 
 if (process.env.NODE_ENV === "development") {
   dotenv.config({ path: ".env.development" });
@@ -54,15 +54,15 @@ const ioOptions = {
 };
 
 // Create a Socket.IO instance attached to the server
-const io = new socketIO.Server(server, ioOptions);
+export const io = new socketIO.Server(Server, ioOptions);
 
 // Set up a connection event handler for new socket connections
 io.on("connection", (socket) => {
+  console.log(`User ID Socket: ${socket.id}`);
   console.log("User connected 🎉");
-
+  
   // Handle custom events or messages from the client
   socket.on("chat message", (msg) => {
-      console.log(`Message from client: ${msg}`);
       // Broadcast the message to all connected clients
       io.emit("chat message", msg);
   });
@@ -73,4 +73,4 @@ io.on("connection", (socket) => {
   });
 });
 
-export default server;
+export default Server;

@@ -8,7 +8,7 @@ const swaggerDefinition: OAS3Definition = {
   },
   servers: [
     {
-      url: "http://ec2-54-167-254-121.compute-1.amazonaws.com",
+      url:  process.env.REACT_URL_BACKEND || "http://localhost:3000",
     },
   ],
   components: {
