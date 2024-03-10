@@ -1,4 +1,5 @@
-import { format, createLogger, Logger, transports } from 'winston';
+import { format, createLogger, Logger, transports } from "winston";
+import "winston-daily-rotate-file";
 
 export class LoggsConfig {
     private loggerInfo!: Logger;
@@ -41,62 +42,70 @@ export class LoggsConfig {
         });
 
         const dateFormat = format.timestamp({
-            format: 'YYY-MM-DD HH:mm:ss'
+            format: "YYY-MM-DD HH:mm:ss"
         });
 
         this.loggerInfo = createLogger({
-            level: 'info',
+            level: "info",
             format: format.combine(
                 dateFormat,
                 textFormat
             ),
             transports: [
-                new transports.File({
-                    filename: 'log/info/info.log'
+                new transports.DailyRotateFile({
+                    filename: "log/info/info-%DATE%.log",
+                    datePattern: "YYYY-MM-DD",
+                    maxFiles: "7d"
                 })
             ]
         });
 
 
         this.loggerError = createLogger({
-            level: 'error',
+            level: "error",
             format: format.combine(
                 dateFormat,
                 textFormat
             ),
             transports: [
-                new transports.File({
-                    filename: 'log/error/error.log'
+                new transports.DailyRotateFile({
+                    filename: "log/error/error-%DATE%.log",
+                    datePattern: "YYYY-MM-DD",
+                    maxFiles: "7d"
                 })
             ]
         });
 
         this.loggerWarn = createLogger({
-            level: 'warn',
+            level: "warn",
             format: format.combine(
                 dateFormat,
                 textFormat
             ),
             transports: [
-                new transports.File({
-                    filename: 'log/warn/warn.log'
+                new transports.DailyRotateFile({
+                    filename: "log/warn/warn-%DATE%.log",
+                    datePattern: "YYYY-MM-DD",
+                    maxFiles: "7d"
                 })
             ]
         });
 
 
         this.loggerDebbug =  createLogger({
-            level: 'debug',
+            level: "debug",
             format: format.combine(
                 dateFormat,
                 textFormat
             ),
             transports: [
-                new transports.File({
-                    filename: 'log/debug/debug.log'
+                new transports.DailyRotateFile({
+                    filename: "log/debug/debug-%DATE%.log",
+                    datePattern: "YYYY-MM-DD",
+                    maxFiles: "7d"
                 })
             ]
-        })
+        });
 
         this.loggerALL = createLogger({
             format: format.combine(
@@ -104,14 +113,15 @@ export class LoggsConfig {
                 textFormat
             ),
             transports: [
-                new transports.File({
-                    filename: 'log/all/all.log'
+                new transports.DailyRotateFile({
+                    filename: "log/all/all-%DATE%.log",
+                    datePattern: "YYYY-MM-DD",
+                    maxFiles: "7d"
                 }),
                 new transports.Console()
             ]
         });
 
-        
-
+    
     }
 }
