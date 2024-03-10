@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+import * as KioskoController from "../controllers/kioskos.controller";
 import { UserType } from "./../types/user.type";
 import Server from "../app";
 
@@ -66,4 +67,8 @@ router.post("/users", (req: Request, res: Response) => {
 
   res.send({ data: body });
 });
+
+
+
+router.get("/kioskos",  KioskoController.kioskos);
 export default router;
