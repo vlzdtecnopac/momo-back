@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run build && NODE_ENV=production node dist/src/server",
-    "dev": "npm run build &&  NODE_ENV=development node dist/src/server ",
+    "dev": "npm run build &&  NODE_ENV=development nodemon dist/src/server ",
     "lint": "tsc --noEmit && eslint \"**/*.{js,ts}\" --quiet --fix",
     "build-ts": "tsc",
     "build": "rm -rf dist/ && npm run build-ts && npm run lint",
@@ -63,6 +63,7 @@
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.6",
     "@types/underscore": "^1.11.15",
+    "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^7.1.0",
     "@typescript-eslint/parser": "^7.1.0",
     "babel-jest": "^29.7.0",

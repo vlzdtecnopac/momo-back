@@ -1,5 +1,6 @@
 import { Socket } from "socket.io";
 import { LoggsConfig } from "../config/logs";
+import { callbackify } from "util";
 
 const socketController = (socket: Socket) => {
   
@@ -10,9 +11,9 @@ const socketController = (socket: Socket) => {
     // Handle custom events or messages from the client
     socket.on("mensaje-welcome", (msg) => {
       // Broadcast the message to all connected clients
-      socket.emit("mensaje-welcome", msg);
+      socket.broadcast.emit("mensaje-welcome", msg);
     });
-
+  
     // Handle disconnection event
     socket.on("disconnect", () => {
       logs.debug("User disconnected 😥");

@@ -1,7 +1,8 @@
 import express, { Request, Response } from "express";
 import * as KioskoController from "../controllers/kioskos.controller";
-import { UserType } from "./../types/user.type";
+import { UserType } from "../types/user.type";
 import Server from "../app";
+import { body, check, param } from "express-validator";
 
 const router = express.Router();
 
@@ -69,6 +70,10 @@ router.post("/users", (req: Request, res: Response) => {
 });
 
 
+router.post("/",  [
+  check("nombre").notEmpty().withMessage("Ingresa el nombre del kiosko."),
+  check("state").isBoolean().withMessage("Error no es boolean.")
+],KioskoController.createKiosko);
 
-router.get("/kioskos",  KioskoController.kioskos);
+router.get("/",  KioskoController.kioskos);
 export default router;

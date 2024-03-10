@@ -1,4 +1,4 @@
 import homeRouter from "./home.route";
-import userRouter from "./user.route";
+import kioskoRouter from "./kiosko.route";
 
-export const API_ROUTER = {homeRouter, userRouter};
+export const API_ROUTER = {homeRouter, kioskoRouter};

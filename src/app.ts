@@ -14,7 +14,7 @@ import socketController from "./sockets/sockets.controller";
 
 export const paths = {
   home: "/",
-  user: "/user",
+  kioskos: "/kioskos",
 };
 
 
@@ -64,7 +64,7 @@ class Server {
     this.app.use(cors({ origin: true, credentials: true }));
     this.app.use(passport.initialize());
     this.app.use(paths.home, API_ROUTER.homeRouter);
-    this.app.use(paths.user, API_ROUTER.userRouter);
+    this.app.use(paths.kioskos, API_ROUTER.kioskoRouter);
 
     if (process.env.NODE_ENV === "development") {
       dotenv.config({ path: ".env.development" });
@@ -80,7 +80,7 @@ class Server {
 
   start(){
     this.server.listen(process.env.PORT,()=>{
-      console.log("App is runnig at http://localhost:%d in %s mode", process.env.PORT, process.env.NODE_ENV);
+      console.log("App is runnig at http://localhost:%d in %s mode", process.env.PORT || 3000, process.env.NODE_EN || "development" );
       console.log(" Press CTRL-C to stop\n");
   },);
   }
