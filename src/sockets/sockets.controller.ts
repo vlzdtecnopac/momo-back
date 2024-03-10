@@ -1,6 +1,7 @@
 import { Socket } from "socket.io";
 import { LoggsConfig } from "../config/logs";
-import { callbackify } from "util";
+import * as KioskoController from "../controllers/kioskos.controller";
+
 
 const socketController = (socket: Socket) => {
   
@@ -13,7 +14,7 @@ const socketController = (socket: Socket) => {
       // Broadcast the message to all connected clients
       socket.broadcast.emit("mensaje-welcome", msg);
     });
-  
+
     // Handle disconnection event
     socket.on("disconnect", () => {
       logs.debug("User disconnected 😥");

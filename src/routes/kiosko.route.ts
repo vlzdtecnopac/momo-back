@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import * as KioskoController from "../controllers/kioskos.controller";
 import { UserType } from "../types/user.type";
 import Server from "../app";
-import { body, check, param } from "express-validator";
+import { body, check, param, query } from "express-validator";
 
 const router = express.Router();
 
@@ -65,7 +65,6 @@ router.get("/users", (req: Request, res: Response) => {
 router.post("/users", (req: Request, res: Response) => {
   const { body } = req;
   Server.instance.io.emit("mensaje-welcome", "Hola David desde server");
-
   res.send({ data: body });
 });
 
@@ -76,4 +75,9 @@ router.post("/",  [
 ],KioskoController.createKiosko);
 
 router.get("/",  KioskoController.kioskos);
+
+router.delete("/:id", KioskoController.deleteKiosko);
+
+router.put("/:id", [query('state').isBoolean().trim().withMessage("Ingrese el estado Kiosko.")], KioskoController.updateKiosko)
+
 export default router;
