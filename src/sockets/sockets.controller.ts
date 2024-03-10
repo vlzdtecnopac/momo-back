@@ -11,7 +11,7 @@ const socketController = (socket: Socket) => {
     logs.debug("User connected 🎉");
     // Handle custom events or messages from the client
     socket.on("kiosko-socket", async (msg) => {
-      const response = await pool.query('SELECT * FROM "Kiosko" ORDER BY id DESC');
+      const response = await pool.query('SELECT * FROM "Kiosko" ORDER BY id ASC');
       // Broadcast the message to all connected clients
       socket.emit("kiosko-socket", response.rows);
     });
