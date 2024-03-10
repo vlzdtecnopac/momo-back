@@ -9,6 +9,8 @@ import cors from "cors";
 import { API_ROUTER } from "./routes";
 import * as http from "http";
 import * as socketIO from "socket.io";
+import { LoggsConfig } from "./config/logs";
+import socketController from "./sockets/sockets.controller";
 
 export const paths = {
   home: "/",
@@ -19,6 +21,7 @@ export const paths = {
 class Server {
 
   private static _instance: Server;
+  private  _logs: LoggsConfig;
 
   private app;
   private server;
@@ -37,6 +40,7 @@ class Server {
   };
 
   constructor() {
+    this._logs = new LoggsConfig();
     this.app = express();
     this.server = http.createServer(this.app);
     this.io = new socketIO.Server(this.server, this.ioOptions);
@@ -71,22 +75,7 @@ class Server {
   }
 
   socketConfig() {
-    // Set up a connection event handler for new socket connections
-    this.io.on("connection", (socket) => {
-      console.log(`User ID Socket: ${socket.id}`);
-      console.log("User connected 🎉");
-
-      // Handle custom events or messages from the client
-      socket.on("chat message", (msg) => {
-        // Broadcast the message to all connected clients
-        this.io.emit("chat message", msg);
-      });
-
-      // Handle disconnection event
-      socket.on("disconnect", () => {
-        console.log("User disconnected 😥");
-      });
-    });
+    this.io.on("connection", socketController);
   }
 
   start(){
