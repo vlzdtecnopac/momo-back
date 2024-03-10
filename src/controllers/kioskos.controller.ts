@@ -25,7 +25,7 @@ export const createKiosko = async (req: Request, res: Response) => {
     return res.status(400).json({ errors: errors.array() });
   }
   try{
-    console.log("sada 21");
+    console.log("sada 23");
     const response = await pool.query(`
     INSERT INTO "Kiosko"
 (id, kiosko_id, state, nombre, create_at)
