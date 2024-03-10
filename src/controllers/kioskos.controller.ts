@@ -10,7 +10,7 @@ const loggsConfig: LoggsConfig = new LoggsConfig();
 export const kioskos = async (req: Request, res: Response) => {
   try {
     const response = await
-      pool.query('SELECT * FROM "Kiosko"');
+      pool.query('SELECT * FROM "Kiosko" ORDER BY id DESC');
     Server.instance.io.emit("kiosko-socket", response.rows);
     return res.status(200).json(response.rows);
   } catch (e) {
@@ -35,7 +35,7 @@ export const updateKiosko = async (req: Request, res: Response) => {
     WHERE id = '${req.params.id}'`);
 
     const consult = await
-      pool.query('SELECT * FROM "Kiosko"');
+      pool.query('SELECT * FROM "Kiosko" ORDER BY id ASC');
     Server.instance.io.emit("kiosko-socket", consult.rows);
 
     return res.status(200).json(response.rows);
@@ -54,7 +54,7 @@ export const deleteKiosko = async (req: Request, res: Response) => {
     }
 
     const response = await pool.query(`DELETE FROM "Kiosko" WHERE id = ${req.params.id}`);
-    const consult = await pool.query('SELECT * FROM "Kiosko"');
+    const consult = await pool.query('SELECT * FROM "Kiosko" ORDER BY id ASC');
 
     Server.instance.io.emit("kiosko-socket", consult.rows);
     return res.status(200).json(response.rows);
@@ -71,16 +71,21 @@ export const createKiosko = async (req: Request, res: Response) => {
     return res.status(400).json({ errors: errors.array() });
   }
   try {
+
     const kiosko_exist = await pool.query(`SELECT * FROM "Kiosko" WHERE nombre = '${req.body.nombre}'`);
     if (kiosko_exist.rows.length >= 1) {
       return res.status(400).json("El kiosko ya existe cambia el nombre");
     }
+
     const response = await pool.query(`
     INSERT INTO "Kiosko"
 (kiosko_id, state, nombre, create_at)
 VALUES('${uuidv4()}', ${req.body.state}, '${req.body.nombre}', now());
     `);
 
+    const consult = await
+    pool.query('SELECT * FROM "Kiosko" ORDER BY id ASC');
+    Server.instance.io.emit("kiosko-socket", consult.rows);
     return res.status(200).json(response.rows);
 
   } catch (e) {

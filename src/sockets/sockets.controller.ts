@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 import { LoggsConfig } from "../config/logs";
-import * as KioskoController from "../controllers/kioskos.controller";
+import { pool } from "../config/db";
 
 
 const socketController = (socket: Socket) => {
@@ -10,9 +10,10 @@ const socketController = (socket: Socket) => {
     logs.debug(`User ID Socket: ${socket.id}`);
     logs.debug("User connected 🎉");
     // Handle custom events or messages from the client
-    socket.on("mensaje-welcome", (msg) => {
+    socket.on("kiosko-socket", async (msg) => {
+      const response = await pool.query('SELECT * FROM "Kiosko" ORDER BY id DESC');
       // Broadcast the message to all connected clients
-      socket.broadcast.emit("mensaje-welcome", msg);
+      socket.emit("kiosko-socket", response.rows);
     });
 
     // Handle disconnection event
