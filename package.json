@@ -9,7 +9,7 @@
     "lint": "tsc --noEmit && eslint \"**/*.{js,ts}\" --quiet --fix",
     "build-ts": "tsc",
     "build": "rm -rf dist/ && npm run build-ts && npm run lint",
-    "watch-node":  "  NODE_ENV=development  nodemon dist/src/server.js",
+    "watch-node":  "NODE_ENV=development nodemon dist/src/server.js",
     "watch-ts": "tsc -w",
     "watch": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node\" -c  \"npm run watch-ts\" \"npm run watch-node\""
   },
