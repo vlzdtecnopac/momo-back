@@ -10,7 +10,7 @@ const socketController = (socket: Socket) => {
     // Handle custom events or messages from the client
     socket.on("mensaje-welcome", (msg) => {
       // Broadcast the message to all connected clients
-    socket.emit("mensaje-welcome", msg);
+      socket.emit("mensaje-welcome", msg);
     });
 
     // Handle disconnection event
