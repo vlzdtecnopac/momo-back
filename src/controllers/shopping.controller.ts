@@ -47,7 +47,7 @@ export const updateShopping = async (req: Request, res: Response) => {
   try {
     const response = await pool.query(`
     UPDATE public."Shopping"
-    SET  name_shopping='$1', no_shooping='$2', address='$3', email='$4', idenfication='$5', phone='$6', update_at=now()
+    SET  name_shopping=$1, no_shooping=$2, address=$3, email=$4, idenfication=$5, phone=$6, update_at=now()
     WHERE id=0;
     `,[name_shopping, no_shopping, address, email, idenfication, phone]);
     return res.status(200).json(response.rows);
