@@ -26,13 +26,13 @@ export const updateKiosko = async (req: Request, res: Response) => {
   }
 
   try {
-    const kiosko_exist = await pool.query(`SELECT * FROM "Kiosko" WHERE id = '${req.params.id}'`);
+    const kiosko_exist = await pool.query(`SELECT * FROM "Kiosko" WHERE id = $1`, [req.params.id]);
     if (kiosko_exist.rows.length <= 0) {
       return res.status(400).json("El kiosko que desea actualizar no existe.");
     }
     const response = await pool.query(`UPDATE "Kiosko"
-    SET  state = ${req.query.state}, update_at= now()
-    WHERE id = '${req.params.id}'`);
+    SET  state = $1, update_at= now()
+    WHERE id = $2`, [req.query.state, req.params.id]);
 
     const consult = await
       pool.query('SELECT * FROM "Kiosko" ORDER BY id ASC');
@@ -48,12 +48,12 @@ export const updateKiosko = async (req: Request, res: Response) => {
 
 export const deleteKiosko = async (req: Request, res: Response) => {
   try{
-    const kiosko_exist = await pool.query(`SELECT * FROM "Kiosko" WHERE id = '${req.params.id}'`);
+    const kiosko_exist = await pool.query(`SELECT * FROM "Kiosko" WHERE id = $1`, [req.params.id]);
     if (kiosko_exist.rows.length <= 0) {
       return res.status(400).json("El kiosko que desea eliminar no existe.");
     }
 
-    const response = await pool.query(`DELETE FROM "Kiosko" WHERE id = ${req.params.id}`);
+    const response = await pool.query(`DELETE FROM "Kiosko" WHERE id = $1`, [req.params.id]);
     const consult = await pool.query('SELECT * FROM "Kiosko" ORDER BY id ASC');
 
     Server.instance.io.emit("kiosko-socket", consult.rows);
@@ -71,8 +71,7 @@ export const createKiosko = async (req: Request, res: Response) => {
     return res.status(400).json({ errors: errors.array() });
   }
   try {
-
-    const kiosko_exist = await pool.query(`SELECT * FROM "Kiosko" WHERE nombre = '${req.body.nombre}'`);
+    const kiosko_exist = await pool.query(`SELECT * FROM "Kiosko" WHERE id = $1`, [req.params.id]);
     if (kiosko_exist.rows.length >= 1) {
       return res.status(400).json("El kiosko ya existe cambia el nombre");
     }
@@ -80,8 +79,8 @@ export const createKiosko = async (req: Request, res: Response) => {
     const response = await pool.query(`
     INSERT INTO "Kiosko"
 (kiosko_id, state, nombre, create_at)
-VALUES('${uuidv4()}', ${req.body.state}, '${req.body.nombre}', now());
-    `);
+VALUES($1, $2, $3, now());
+    `, [uuidv4(), req.body.state, req.body.nombre]);
 
     const consult = await
     pool.query('SELECT * FROM "Kiosko" ORDER BY id ASC');

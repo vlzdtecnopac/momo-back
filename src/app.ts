@@ -14,6 +14,7 @@ import socketController from "./sockets/sockets.controller";
 
 export const paths = {
   home: "/",
+  shooping: "/shopping",
   kioskos: "/kioskos",
 };
 
@@ -65,6 +66,7 @@ class Server {
     this.app.use(passport.initialize());
     this.app.use(paths.home, API_ROUTER.homeRouter);
     this.app.use(paths.kioskos, API_ROUTER.kioskoRouter);
+    this.app.use(paths.shooping, API_ROUTER.shoppingRouter);
 
     if (process.env.NODE_ENV === "development") {
       dotenv.config({ path: ".env.development" });
