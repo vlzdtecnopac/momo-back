@@ -42,6 +42,21 @@ export const getShopping = async (req: Request, res: Response) => {
   }
 }
 
+export const updateShopping = async (req: Request, res: Response) => {
+  const {name_shopping, no_shopping, address, email, idenfication, phone, closing, open} = req.body;
+  try {
+    const response = await pool.query(`
+    UPDATE public."Shopping"
+    SET  name_shopping='$1', no_shooping='$2', address='$3', email='$4', idenfication='$5', phone='$6', update_at=now()
+    WHERE id=0;
+    `,[name_shopping, no_shopping, address, email, idenfication, phone]);
+    return res.status(200).json(response.rows);
+  } catch (e) {
+    loggsConfig.error(`${e}`);
+    return res.status(500).json(e);
+  }
+}
+
 export const deleteShopping =  async (req: Request, res: Response) =>{
   const shopping_exist = await pool.query(`SELECT * FROM "Shopping" WHERE id = $1`, [req.params.id]);
   if (shopping_exist.rows.length <= 0) {
