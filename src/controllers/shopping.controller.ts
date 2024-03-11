@@ -13,7 +13,6 @@ export const createShopping = async (req: Request, res: Response) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-
   try {
     const response = await pool.query(`
         INSERT INTO "Shopping" (

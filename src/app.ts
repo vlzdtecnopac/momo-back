@@ -1,4 +1,4 @@
-import express from "express";
+import express, {Express} from "express";
 import bodyParser from "body-parser";
 import passport from "passport";
 import path from "path";
@@ -14,6 +14,7 @@ import socketController from "./sockets/sockets.controller";
 
 export const paths = {
   home: "/",
+  users: "/users",
   shooping: "/shopping",
   kioskos: "/kioskos",
 };
@@ -24,7 +25,7 @@ class Server {
   private static _instance: Server;
   private  _logs: LoggsConfig;
 
-  private app;
+  private app: Express;
   private server;
   public io;
   private ioOptions = {
@@ -64,9 +65,7 @@ class Server {
     this.app.use(bodyParser.urlencoded({ extended: true }));
     this.app.use(cors({ origin: true, credentials: true }));
     this.app.use(passport.initialize());
-    this.app.use(paths.home, API_ROUTER.homeRouter);
-    this.app.use(paths.kioskos, API_ROUTER.kioskoRouter);
-    this.app.use(paths.shooping, API_ROUTER.shoppingRouter);
+    this.rutasConfig(this.app);
 
     if (process.env.NODE_ENV === "development") {
       dotenv.config({ path: ".env.development" });
@@ -74,6 +73,14 @@ class Server {
       dotenv.config({ path: ".env.production" });
     }
 
+  }
+
+
+  rutasConfig(app: Express){
+    app.use(paths.home, API_ROUTER.homeRouter);
+    app.use(paths.users, API_ROUTER.userRouter);
+    app.use(paths.kioskos, API_ROUTER.kioskoRouter);
+    app.use(paths.shooping, API_ROUTER.shoppingRouter);
   }
 
   socketConfig() {
