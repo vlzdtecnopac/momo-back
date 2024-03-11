@@ -1,6 +1,7 @@
 import {Router} from "express";
 import * as UserController from "../controllers/user.controller";
 import { check } from "express-validator";
+import validateJWT from "../middlewares/validate_jwt.middleware";
 const router = Router();
 
 router.post("/employee", [
@@ -15,7 +16,7 @@ router.post("/employee", [
 
 router.delete("/employee/:id", UserController.userDeleteEmployee);
 
-router.get("/employee", UserController.userAllEmployeee);
+router.get("/employee", [validateJWT], UserController.userAllEmployeee);
 
 router.put("/employee/:id",[
     check("shopping_id").notEmpty().withMessage("Ingresa el ID Shopping."),

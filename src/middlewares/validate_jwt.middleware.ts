@@ -20,16 +20,16 @@ const validateJWT = async (req: Request, res: Response, next: NextFunction) => {
         const { uid } = jwt.verify(token, secretKey) as { uid: string };
 
         // Verificar Usuario
-        const employee: any = await pool.query(`SELECT first_name, last_name, phone, email, state FROM "Employes" WHERE employee_id = $1 ;`, [uid]);
-
-        if (!employee) {
+        const employee = await pool.query(`SELECT first_name, last_name, phone, email, state FROM "Employes" WHERE employee_id = $1 ;`, [uid]);
+      
+        if (!employee.rows) {
             return res.status(401).json({
                 msg: 'Token no válido - Usuario no existe DB.'
             })
         }
 
         // State de la cuenta is TRUE
-        if (!employee.state) {
+        if (!employee.rows[0].state) {
             return res.status(401).json({
                 msg: 'Token no válido - Usuario inactivo.'
             })
