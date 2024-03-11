@@ -7,7 +7,7 @@ const loggsConfig: LoggsConfig = new LoggsConfig();
 const validateJWT = async (req: Request, res: Response, next: NextFunction) => {
 
     const token = req.header("x-token");
-    const secretKey: jwt.Secret = process.env.SECRET_KEY || 'defaultSecretKey';
+    const secretKey: jwt.Secret = process.env.SECRETORPRIVATEKEY || 'MOMO123456';
 
     if (!token) {
         return res.status(401).json({
@@ -24,14 +24,14 @@ const validateJWT = async (req: Request, res: Response, next: NextFunction) => {
 
         if (!employee) {
             return res.status(401).json({
-                msg: 'Token no válido - Usuario no existe DB'
+                msg: 'Token no válido - Usuario no existe DB.'
             })
         }
 
-        // State de la cuenta
+        // State de la cuenta is TRUE
         if (!employee.state) {
             return res.status(401).json({
-                msg: 'Token no válido - Usuario con estado: false'
+                msg: 'Token no válido - Usuario inactivo.'
             })
         }
 

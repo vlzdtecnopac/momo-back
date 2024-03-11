@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import { LoggsConfig } from "../config/logs";
 import { validationResult } from "express-validator";
 import { pool } from "../config/db";
+import { generateAuthToken } from "../helpers/generate_jwt.helpers";
 
 const loggsConfig: LoggsConfig = new LoggsConfig();
 const saltRounds = 10;
@@ -33,14 +34,16 @@ export const userRegisterEmployee = async (req: Request, res: Response) => {
     const salt = await bcrypt.genSalt(saltRounds);
     const hash = await bcrypt.hash(password, salt);
 
+    let employee_id = uuidv4();
+
     try {
         const response = await pool.query(`
         INSERT INTO public."Employes"
         (employee_id, shopping_id, first_name, last_name, phone, email, state, "password", create_at)
         VALUES($1, $2, $3, $4, $5, $6, $7, $8, now());
-        `, [uuidv4(), shopping_id, first_name, last_name, phone, email, state, hash]);
+        `, [employee_id, shopping_id, first_name, last_name, phone, email, state, hash]);
 
-        return res.status(200).json(response.rows);
+        return res.status(200).json({...response.rows, token: generateAuthToken(employee_id)});
     } catch (e) {
         loggsConfig.error(`${e}`);
         return res.status(500).json(e);
