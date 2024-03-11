@@ -29,20 +29,20 @@ export const createShopping = async (req: Request, res: Response) => {
 }
 
 export const getShopping = async (req: Request, res: Response) => {
-  const {shopping_id, name_shopping, no_shooping, phone} = req.query;
+  const {shopping_id, name_shopping, no_shooping, phone, idenfication} = req.query;
   try {
 
     let Query = `SELECT id, shopping_id, name_shopping, no_shooping, address, email, idenfication, phone, closing, "open", create_at, update_at
     FROM public."Shopping"`;
 
-    if(shopping_id != undefined || name_shopping != undefined || no_shooping != undefined || phone != undefined){
+    if(shopping_id != undefined || name_shopping != undefined || no_shooping != undefined || phone != undefined || idenfication != undefined){
       let arrayWehere = [];
       
       shopping_id == "" ? "" : arrayWehere.push({"shopping_id": shopping_id});
       name_shopping  == "" ? "" : arrayWehere.push({"name_shopping": name_shopping});
       no_shooping  == "" ? "" : arrayWehere.push({"no_shooping": no_shooping});
       phone  == "" ? "" : arrayWehere.push({"phone": phone});
-
+      idenfication == "" ? "" : arrayWehere.push({"idenfication": idenfication});
       let result_consult = arrayWehere.map(item => ` ${Object.keys(item)} = '${Object.values(item)}'`).join("OR")
       Query += ` WHERE ${result_consult}`
     }

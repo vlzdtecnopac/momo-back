@@ -27,7 +27,8 @@ router.get("/", [
     query("shopping_id").optional(),
     query("name_shopping").optional(),
     query("no_shooping").optional(),
-    query("phone").optional()
+    query("phone").optional(),
+    query("idenfication").optional()
 ],ShoppingController.getShopping);
 
 router.delete("/:id", ShoppingController.deleteShopping);
