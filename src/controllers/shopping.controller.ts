@@ -29,12 +29,17 @@ export const createShopping = async (req: Request, res: Response) => {
 }
 
 export const getShopping = async (req: Request, res: Response) => {
-
+  const {shopping_id} = req.query;
   try {
-    const response = await pool.query(`
-    SELECT id, shopping_id, name_shopping, no_shooping, address, email, idenfication, phone, closing, "open", create_at, update_at
-    FROM public."Shopping";
-    `);
+
+    let Query = ` SELECT id, shopping_id, name_shopping, no_shooping, address, email, idenfication, phone, closing, "open", create_at, update_at
+    FROM public."Shopping" `;
+
+    if(shopping_id != undefined){
+      Query += ` WHERE shopping_id = '${shopping_id}'`
+    }
+   
+    const response = await pool.query(Query);
     return res.status(200).json(response.rows);
   } catch (e) {
     loggsConfig.error(`${e}`);

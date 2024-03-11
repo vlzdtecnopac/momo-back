@@ -10,9 +10,11 @@ router.post("/employee", [
     check("phone").notEmpty().withMessage("Ingresa el número telefónico."),
     check("email").isEmail().withMessage("Ingresa el correo electrónico."),
     check("password").notEmpty().withMessage("Ingresa la contraseña."),
-] , UserController.userRegisterEmploye)
+] , UserController.userRegisterEmployee)
 
 router.delete("/employee/:id", UserController.userDeleteEmployee);
+
+router.get("/employee", UserController.userAllEmployeee);
 
 router.put("/employee/:id",[
     check("shopping_id").notEmpty().withMessage("Ingresa el ID Shopping."),

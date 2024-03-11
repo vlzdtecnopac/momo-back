@@ -7,8 +7,20 @@ import { pool } from "../config/db";
 const loggsConfig: LoggsConfig = new LoggsConfig();
 const saltRounds = 10;
 
+export const userAllEmployeee =  async (req: Request, res: Response) => {
+    try {
+        const response = await pool.query(`SELECT id, shopping_id, kiosko_id, first_name, last_name, phone, email, "password", create_at, update_at
+        FROM public."Employes";
+        `);
 
-export const userRegisterEmploye = async (req: Request, res: Response) => {
+        return res.status(200).json(response.rows);
+    } catch (e) {
+        loggsConfig.error(`${e}`);
+        return res.status(500).json(e);
+    }
+}
+
+export const userRegisterEmployee = async (req: Request, res: Response) => {
 
     const { shopping_id, first_name, last_name, phone, email, password } = req.body;
 
