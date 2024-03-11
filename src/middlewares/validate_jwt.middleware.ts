@@ -18,7 +18,7 @@ const validateJWT = async (req: Request, res: Response) => {
     const { uid } = jwt.verify( token, secretKey )  as { uid: string };
 
     // Verificar Usuario
-     const employee = await pool.query(`SELECT state FROM "Employes" WHERE id = $1 ;`, [uid]);
+     const employee = await pool.query(`SELECT state FROM "Employes" WHERE employee_id = $1 ;`, [uid]);
 
      if( !employee ) {
          return res.status(401).json({

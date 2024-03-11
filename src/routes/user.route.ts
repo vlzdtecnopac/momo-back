@@ -10,6 +10,7 @@ router.post("/employee", [
     check("phone").notEmpty().withMessage("Ingresa el número telefónico."),
     check("email").isEmail().withMessage("Ingresa el correo electrónico."),
     check("password").notEmpty().withMessage("Ingresa la contraseña."),
+    check("state").notEmpty().withMessage("Ingresa el estado de la cuenta."),
 ] , UserController.userRegisterEmployee)
 
 router.delete("/employee/:id", UserController.userDeleteEmployee);
@@ -24,6 +25,7 @@ router.put("/employee/:id",[
     check("phone").notEmpty().withMessage("Ingresa el número telefónico."),
     check("email").isEmail().withMessage("Ingresa el correo electrónico."),
     check("password").notEmpty().withMessage("Ingresa la contraseña."),
+    check("state").optional(),
 ],UserController.userUpdateEmployee);
 
 export default router;
