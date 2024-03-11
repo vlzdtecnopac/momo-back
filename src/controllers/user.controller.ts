@@ -14,21 +14,34 @@ export const startSessionEmployee = async (req: Request, res: Response) => {
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-    const { email, password } = req.body;
+    try {
+        const { email, password } = req.body;
 
-    const response = await pool.query(`SELECT employee_id, "password" FROM "Employes"
+        const response = await pool.query(`SELECT employee_id, "password", state FROM "Employes"
     WHERE email = $1
     `, [email]);
 
-    bcrypt.compare(password, response.rows[0].password, (err, match) => {
-        if (err) {
-            loggsConfig.error(`Error comparing passwords: $${err}`);
-        } else if (match) {
-            return res.status(200).json({ token: generateAuthToken(response.rows[0].employee_id) });
-        } else {
-            loggsConfig.error(`Login failed. Incorrect password.`);
+        if(response.rows[0] == undefined){
+            return res.status(401).json({ msg: "No existe usuario." });
         }
-    });
+
+        if (!response.rows[0].state) {
+            return res.status(401).json({ msg: "La cuenta se encuentra inactiva." });
+        }
+
+        bcrypt.compare(password, response.rows[0].password, (err, match) => {
+            if (err) {
+                loggsConfig.error(`Error comparing passwords: $${err}`);
+            } else if (match) {
+                return res.status(200).json({ token: generateAuthToken(response.rows[0].employee_id) });
+            } else {
+                loggsConfig.error(`Login failed. Incorrect password.`);
+            }
+        });
+    } catch (e) {
+        loggsConfig.error(`${e}`);
+        return res.status(500).json(e);
+    }
 
 }
 
