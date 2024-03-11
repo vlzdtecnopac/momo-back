@@ -23,7 +23,12 @@ router.put("/:id", [
     check("phone").notEmpty().withMessage("Ingresa el número telefonico de la tienda"),
 ], ShoppingController.updateShopping);
 
-router.get("/", query("shopping_id").optional() ,ShoppingController.getShopping);
+router.get("/", [
+    query("shopping_id").optional(),
+    query("name_shopping").optional(),
+    query("no_shooping").optional(),
+    query("phone").optional()
+],ShoppingController.getShopping);
 
 router.delete("/:id", ShoppingController.deleteShopping);
 

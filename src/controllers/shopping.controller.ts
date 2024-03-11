@@ -29,17 +29,21 @@ export const createShopping = async (req: Request, res: Response) => {
 }
 
 export const getShopping = async (req: Request, res: Response) => {
-  const {shopping_id} = req.query;
+  const {shopping_id, name_shopping, no_shooping, phone} = req.query;
   try {
 
-    let Query = ` SELECT id, shopping_id, name_shopping, no_shooping, address, email, idenfication, phone, closing, "open", create_at, update_at
-    FROM public."Shopping" `;
+    let Query = `SELECT id, shopping_id, name_shopping, no_shooping, address, email, idenfication, phone, closing, "open", create_at, update_at
+    FROM public."Shopping"`;
 
-
-    if(shopping_id != undefined){
+    if(shopping_id != undefined || name_shopping != undefined || no_shooping != undefined || phone != undefined){
       let arrayWehere = [];
+      
       shopping_id == "" ? "" : arrayWehere.push({"shopping_id": shopping_id});
-      let result_consult = arrayWehere.map(item => `${Object.keys(item)} = '${Object.values(item)}'`).join("OR")
+      name_shopping  == "" ? "" : arrayWehere.push({"name_shopping": name_shopping});
+      no_shooping  == "" ? "" : arrayWehere.push({"no_shooping": no_shooping});
+      phone  == "" ? "" : arrayWehere.push({"phone": phone});
+
+      let result_consult = arrayWehere.map(item => ` ${Object.keys(item)} = '${Object.values(item)}'`).join("OR")
       Query += ` WHERE ${result_consult}`
     }
    
