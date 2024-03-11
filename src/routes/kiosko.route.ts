@@ -5,6 +5,7 @@ import { body, check, param, query } from "express-validator";
 const router = express.Router();
 
 router.post("/",  [
+  check("shopping_id").notEmpty().withMessage("Ingresa el ID Shopping."),
   check("nombre").notEmpty().withMessage("Ingresa el nombre del kiosko."),
   check("state").isBoolean().withMessage("Error no es boolean.")
 ],KioskoController.createKiosko);

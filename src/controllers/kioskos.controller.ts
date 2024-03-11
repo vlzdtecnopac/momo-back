@@ -66,6 +66,8 @@ export const deleteKiosko = async (req: Request, res: Response) => {
 
 
 export const createKiosko = async (req: Request, res: Response) => {
+  const {state, nombre, shopping_id} = req.body;
+  
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -78,9 +80,9 @@ export const createKiosko = async (req: Request, res: Response) => {
 
     const response = await pool.query(`
     INSERT INTO "Kiosko"
-(kiosko_id, state, nombre, create_at)
-VALUES($1, $2, $3, now());
-    `, [uuidv4(), req.body.state, req.body.nombre]);
+(kiosko_id, state, nombre, shopping_id, create_at)
+VALUES($1, $2, $3, $4, now());
+    `, [uuidv4(), state, nombre, shopping_id]);
 
     const consult = await
     pool.query('SELECT * FROM "Kiosko" ORDER BY id ASC');
