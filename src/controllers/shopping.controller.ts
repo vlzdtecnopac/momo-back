@@ -35,8 +35,12 @@ export const getShopping = async (req: Request, res: Response) => {
     let Query = ` SELECT id, shopping_id, name_shopping, no_shooping, address, email, idenfication, phone, closing, "open", create_at, update_at
     FROM public."Shopping" `;
 
+
     if(shopping_id != undefined){
-      Query += ` WHERE shopping_id = '${shopping_id}'`
+      let arrayWehere = [];
+      shopping_id == "" ? "" : arrayWehere.push({"shopping_id": shopping_id});
+      let result_consult = arrayWehere.map(item => `${Object.keys(item)} = '${Object.values(item)}'`).join("OR")
+      Query += ` WHERE ${result_consult}`
     }
    
     const response = await pool.query(Query);
