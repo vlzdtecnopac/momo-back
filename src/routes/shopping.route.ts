@@ -2,10 +2,12 @@
 import express, { Request, Response } from "express";
 import * as ShoppingController from "../controllers/shopping.controller";
 import { body, check, param, query } from "express-validator";
+import validateJWT from "../middlewares/validate_jwt.middleware";
 
 const router = express.Router();
 
 router.post("/", [
+    validateJWT,
     check("name_shopping").notEmpty().withMessage("Ingresa  el nombre de la tienda no puede estar vacio."),
     check("no_shopping").isNumeric().notEmpty().withMessage("Ingresa el número de la tienda."),
     check("address").notEmpty().withMessage("Ingresa la dirección."),
@@ -15,6 +17,7 @@ router.post("/", [
 ], ShoppingController.createShopping);
 
 router.put("/:id", [
+    validateJWT,
     check("name_shopping").notEmpty().withMessage("Ingresa  el nombre de la tienda no puede estar vacio."),
     check("no_shopping").isNumeric().notEmpty().withMessage("Ingresa el número de la tienda."),
     check("address").notEmpty().withMessage("Ingresa la dirección."),
@@ -24,6 +27,7 @@ router.put("/:id", [
 ], ShoppingController.updateShopping);
 
 router.get("/", [
+    validateJWT,
     query("shopping_id").optional(),
     query("name_shopping").optional(),
     query("no_shooping").optional(),
@@ -31,6 +35,6 @@ router.get("/", [
     query("idenfication").optional()
 ],ShoppingController.getShopping);
 
-router.delete("/:id", ShoppingController.deleteShopping);
+router.delete("/:id", [validateJWT], ShoppingController.deleteShopping);
 
 export default router;
