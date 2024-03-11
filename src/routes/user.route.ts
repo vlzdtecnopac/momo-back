@@ -11,4 +11,6 @@ router.post("/employee", [
     check("email").isEmail().withMessage("Ingresa el correo electrónico."),
     check("password").notEmpty().withMessage("Ingresa la contraseña."),
 ] , UserController.userRegisterEmploye)
+
+router.delete("/employee/:id", UserController.userDeleteEmployee);
 export default router;
