@@ -13,4 +13,15 @@ router.post("/employee", [
 ] , UserController.userRegisterEmploye)
 
 router.delete("/employee/:id", UserController.userDeleteEmployee);
+
+router.put("/employee/:id",[
+    check("shopping_id").notEmpty().withMessage("Ingresa el ID Shopping."),
+    check("kiosko_id").optional(),
+    check("first_name").notEmpty().withMessage("Ingresa los nombres completos."),
+    check("last_name").notEmpty().withMessage("Ingresa el apellido completo."),
+    check("phone").notEmpty().withMessage("Ingresa el número telefónico."),
+    check("email").isEmail().withMessage("Ingresa el correo electrónico."),
+    check("password").notEmpty().withMessage("Ingresa la contraseña."),
+],UserController.userUpdateEmployee);
+
 export default router;
