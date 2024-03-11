@@ -14,4 +14,8 @@ router.post("/", [
     check("phone").notEmpty().withMessage("Ingresa el número telefonico de la tienda"),
 ], ShoppingController.createShopping);
 
+router.get("/", ShoppingController.getShopping);
+
+router.delete("/:id", ShoppingController.deleteShopping);
+
 export default router;
