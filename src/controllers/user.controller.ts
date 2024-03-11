@@ -9,30 +9,30 @@ import { generateAuthToken } from "../helpers/generate_jwt.helpers";
 const loggsConfig: LoggsConfig = new LoggsConfig();
 const saltRounds = 10;
 
-export const startSession = async (req: Request, res: Response) => {
+export const startSessionEmployee = async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-    const {email, password} = req.body;
+    const { email, password } = req.body;
 
-    const response = await pool.query(`SELECT "password" FROM "Employes"
+    const response = await pool.query(`SELECT employee_id, "password" FROM "Employes"
     WHERE email = $1
-    `,[email]);
+    `, [email]);
 
     bcrypt.compare(password, response.rows[0].password, (err, match) => {
         if (err) {
-          loggsConfig.error(`Error comparing passwords: $${err}`);
+            loggsConfig.error(`Error comparing passwords: $${err}`);
         } else if (match) {
-          console.log('Login successful');
+            return res.status(200).json({ token: generateAuthToken(response.rows[0].employee_id) });
         } else {
             loggsConfig.error(`Login failed. Incorrect password.`);
         }
-      });
+    });
 
 }
 
-export const userAllEmployeee =  async (req: Request, res: Response) => {
+export const userAllEmployeee = async (req: Request, res: Response) => {
     try {
         const response = await pool.query(`SELECT id, shopping_id, kiosko_id, first_name, last_name, phone, email, "password", create_at, update_at
         FROM public."Employes";
@@ -52,7 +52,7 @@ export const userRegisterEmployee = async (req: Request, res: Response) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const {shopping_id, first_name, last_name, phone, email, password, state } = req.body;
+    const { shopping_id, first_name, last_name, phone, email, password, state } = req.body;
 
 
     const salt = await bcrypt.genSalt(saltRounds);
@@ -67,7 +67,7 @@ export const userRegisterEmployee = async (req: Request, res: Response) => {
         VALUES($1, $2, $3, $4, $5, $6, $7, $8, now());
         `, [employee_id, shopping_id, first_name, last_name, phone, email, state, hash]);
 
-        return res.status(200).json({...response.rows, token: generateAuthToken(employee_id)});
+        return res.status(200).json({ ...response.rows, token: generateAuthToken(employee_id) });
     } catch (e) {
         loggsConfig.error(`${e}`);
         return res.status(500).json(e);

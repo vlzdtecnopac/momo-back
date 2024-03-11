@@ -32,6 +32,6 @@ router.put("/employee/:id",[
 router.post("/employee/login",[
     check("email").isEmail().withMessage("Ingresa el correo electrónico."),
     check("password").notEmpty().withMessage("Ingresa la contraseña."),
-] ,UserController.startSession )
+] ,UserController.startSessionEmployee )
 
 export default router;
