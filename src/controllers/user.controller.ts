@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { v4 as uuidv4 } from "uuid";
 import bcrypt from 'bcrypt';
 import { LoggsConfig } from "../config/logs";
 import { validationResult } from "express-validator";
@@ -22,7 +23,7 @@ export const userAllEmployeee =  async (req: Request, res: Response) => {
 
 export const userRegisterEmployee = async (req: Request, res: Response) => {
 
-    const { shopping_id, first_name, last_name, phone, email, password, state } = req.body;
+    const {shopping_id, first_name, last_name, phone, email, password, state } = req.body;
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -35,9 +36,9 @@ export const userRegisterEmployee = async (req: Request, res: Response) => {
     try {
         const response = await pool.query(`
         INSERT INTO public."Employes"
-        (shopping_id, first_name, last_name, phone, email, state, "password", create_at)
-        VALUES($1, $2, $3, $4, $5, $6, $7, now());
-        `, [shopping_id, first_name, last_name, phone, email, state, hash]);
+        (employee_id, shopping_id, first_name, last_name, phone, email, state, "password", create_at)
+        VALUES($1, $2, $3, $4, $5, $6, $7, $8, now());
+        `, [uuidv4(), shopping_id, first_name, last_name, phone, email, state, hash]);
 
         return res.status(200).json(response.rows);
     } catch (e) {
