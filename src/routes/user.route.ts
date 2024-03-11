@@ -28,4 +28,10 @@ router.put("/employee/:id",[
     check("state").optional().isBoolean(),
 ],UserController.userUpdateEmployee);
 
+
+router.post("/employee/login",[
+    check("email").isEmail().withMessage("Ingresa el correo electrónico."),
+    check("password").notEmpty().withMessage("Ingresa la contraseña."),
+] ,UserController.startSession )
+
 export default router;
