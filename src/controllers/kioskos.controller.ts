@@ -8,19 +8,25 @@ import Server from "../app";
 const loggsConfig: LoggsConfig = new LoggsConfig();
 
 export const kioskos = async (req: Request, res: Response) => {
-  const {shopping_id} = req.query;
+  const {shopping_id, state} = req.query;
   try {
     let Query = `
     SELECT k.*, s.name_shopping FROM "Kiosko" k
 join "Shopping" s on s.shopping_id = k.shopping_id `;
     if(shopping_id != undefined){
       const arrayWehere = [];
-      shopping_id == "" ? "" : arrayWehere.push({"s.shopping_id": shopping_id});
-      const result_consult = arrayWehere.map(item => ` ${Object.keys(item)} = '${Object.values(item)}'`).join("OR");
+
+      shopping_id == "" ? "" : arrayWehere.push({"k.shopping_id": shopping_id});
+      state == undefined ? "" : arrayWehere.push({"k.state": state});
+      
+      const result_consult = arrayWehere.map(item => ` ${Object.keys(item)} = '${Object.values(item)}'`).join("AND");
+    
       Query += ` WHERE ${result_consult}`;
     }
 
     Query += ` ORDER BY k.id ASC`;
+
+    console.log(Query);
 
     const response = await
       pool.query(Query);
