@@ -15,6 +15,7 @@ import socketController from "./sockets/sockets.controller";
 export const paths = {
   home: "/",
   users: "/users",
+  config: "/config",
   shooping: "/shopping",
   kioskos: "/kioskos",
 };
@@ -75,10 +76,10 @@ class Server {
 
   }
 
-
   rutasConfig(app: Express){
     app.use(paths.home, API_ROUTER.homeRouter);
     app.use(paths.users, API_ROUTER.userRouter);
+    app.use(paths.config, API_ROUTER.configRouter);
     app.use(paths.kioskos, API_ROUTER.kioskoRouter);
     app.use(paths.shooping, API_ROUTER.shoppingRouter);
   }

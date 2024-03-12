@@ -26,8 +26,6 @@ join "Shopping" s on s.shopping_id = k.shopping_id `;
 
     Query += ` ORDER BY k.id ASC`;
 
-    console.log(Query);
-
     const response = await
       pool.query(Query);
     Server.instance.io.emit("kiosko-socket", response.rows);
@@ -112,7 +110,6 @@ join "Shopping" s on s.shopping_id = k.shopping_id  WHERE k.shopping_id = $1
 ORDER BY k.id ASC`, [shopping_id]);
     Server.instance.io.emit("kiosko-socket", consult.rows);
     return res.status(200).json(response.rows);
-
   } catch (e) {
     loggsConfig.error(`${e}`);
     return res.status(500).json(e);
