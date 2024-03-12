@@ -49,8 +49,8 @@ export const updateKiosko = async (req: Request, res: Response) => {
 
     const consult = await
       pool.query(`SELECT k.*, s.name_shopping FROM "Kiosko" k
-      join "Shopping" s on s.shopping_id = k.shopping_id 
-      ORDER BY k.id ASC`);
+      join "Shopping" s on s.shopping_id = k.shopping_id  WHERE k.shopping_id = $1
+      ORDER BY k.id ASC`, [localStorage.getItem("store-momo")]);
     Server.instance.io.emit("kiosko-socket", consult.rows);
 
     return res.status(200).json(response.rows);
