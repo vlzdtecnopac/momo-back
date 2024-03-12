@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, query } from "express";
 import { v4 as uuidv4 } from "uuid";
 import { pool } from "../config/db";
 import { LoggsConfig } from "../config/logs";
@@ -8,12 +8,22 @@ import Server from "../app";
 const loggsConfig: LoggsConfig = new LoggsConfig();
 
 export const kioskos = async (req: Request, res: Response) => {
+  const {shopping_id} = req.query;
   try {
+    let Query = `
+    SELECT k.*, s.name_shopping FROM "Kiosko" k
+join "Shopping" s on s.shopping_id = k.shopping_id`;
+    if(shopping_id != undefined){
+      const arrayWehere = [];
+      shopping_id == "" ? "" : arrayWehere.push({"s.shopping_id": shopping_id});
+      const result_consult = arrayWehere.map(item => ` ${Object.keys(item)} = '${Object.values(item)}'`).join("OR");
+      Query += ` WHERE ${result_consult}`;
+    }
+
+    Query += ` ORDER BY k.id ASC`;
+
     const response = await
-      pool.query(`
-      SELECT k.*, s.name_shopping FROM "Kiosko" k
-join "Shopping" s on s.shopping_id = k.shopping_id 
-ORDER BY k.id ASC`);
+      pool.query(Query);
     Server.instance.io.emit("kiosko-socket", response.rows);
     return res.status(200).json(response.rows);
   } catch (e) {
@@ -29,7 +39,7 @@ export const updateKiosko = async (req: Request, res: Response) => {
   }
 
   try {
-    const kiosko_exist = await pool.query(`SELECT * FROM "Kiosko" WHERE id = $1`, [req.params.id]);
+    const kiosko_exist = await pool.query("SELECT * FROM \"Kiosko\" WHERE id = $1", [req.params.id]);
     if (kiosko_exist.rows.length <= 0) {
       return res.status(400).json("El kiosko que desea actualizar no existe.");
     }
@@ -49,16 +59,16 @@ export const updateKiosko = async (req: Request, res: Response) => {
     return res.status(500).json(e);
   }
 
-}
+};
 
 export const deleteKiosko = async (req: Request, res: Response) => {
   try{
-    const kiosko_exist = await pool.query(`SELECT * FROM "Kiosko" WHERE id = $1`, [req.params.id]);
+    const kiosko_exist = await pool.query("SELECT * FROM \"Kiosko\" WHERE id = $1", [req.params.id]);
     if (kiosko_exist.rows.length <= 0) {
       return res.status(400).json("El kiosko que desea eliminar no existe.");
     }
 
-    const response = await pool.query(`DELETE FROM "Kiosko" WHERE id = $1`, [req.params.id]);
+    const response = await pool.query("DELETE FROM \"Kiosko\" WHERE id = $1", [req.params.id]);
     const consult = await pool.query(`SELECT k.*, s.name_shopping FROM "Kiosko" k
     join "Shopping" s on s.shopping_id = k.shopping_id 
     ORDER BY k.id ASC`);
@@ -69,7 +79,7 @@ export const deleteKiosko = async (req: Request, res: Response) => {
     loggsConfig.error(`${e}`);
     return res.status(500).json(e);
   }
-}
+};
 
 
 export const createKiosko = async (req: Request, res: Response) => {
@@ -80,7 +90,7 @@ export const createKiosko = async (req: Request, res: Response) => {
     return res.status(400).json({ errors: errors.array() });
   }
   try {
-    const kiosko_exist = await pool.query(`SELECT * FROM "Kiosko" WHERE id = $1`, [req.params.id]);
+    const kiosko_exist = await pool.query("SELECT * FROM \"Kiosko\" WHERE id = $1", [req.params.id]);
     if (kiosko_exist.rows.length >= 1) {
       return res.status(400).json("El kiosko ya existe cambia el nombre");
     }

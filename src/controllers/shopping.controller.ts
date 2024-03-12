@@ -26,7 +26,7 @@ export const createShopping = async (req: Request, res: Response) => {
     return res.status(500).json(e);
   }
 
-}
+};
 
 export const getShopping = async (req: Request, res: Response) => {
   const {shopping_id, name_shopping, no_shooping, phone, idenfication} = req.query;
@@ -36,15 +36,15 @@ export const getShopping = async (req: Request, res: Response) => {
     FROM public."Shopping"`;
 
     if(shopping_id != undefined || name_shopping != undefined || no_shooping != undefined || phone != undefined || idenfication != undefined){
-      let arrayWehere = [];
+      const arrayWehere = [];
       
       shopping_id == "" ? "" : arrayWehere.push({"shopping_id": shopping_id});
       name_shopping  == "" ? "" : arrayWehere.push({"name_shopping": name_shopping});
       no_shooping  == "" ? "" : arrayWehere.push({"no_shooping": no_shooping});
       phone  == "" ? "" : arrayWehere.push({"phone": phone});
       idenfication == "" ? "" : arrayWehere.push({"idenfication": idenfication});
-      let result_consult = arrayWehere.map(item => ` ${Object.keys(item)} = '${Object.values(item)}'`).join("OR")
-      Query += ` WHERE ${result_consult}`
+      const result_consult = arrayWehere.map(item => ` ${Object.keys(item)} = '${Object.values(item)}'`).join("OR");
+      Query += ` WHERE ${result_consult}`;
     }
    
     const response = await pool.query(Query);
@@ -53,7 +53,7 @@ export const getShopping = async (req: Request, res: Response) => {
     loggsConfig.error(`${e}`);
     return res.status(500).json(e);
   }
-}
+};
 
 export const updateShopping = async (req: Request, res: Response) => {
   const errors = validationResult(req);
@@ -62,7 +62,7 @@ export const updateShopping = async (req: Request, res: Response) => {
   }
   const {name_shopping, no_shopping, address, email, idenfication, phone} = req.body;
 
-  const shopping_exist = await pool.query(`SELECT * FROM "Shopping" WHERE id = $1`, [req.params.id]);
+  const shopping_exist = await pool.query("SELECT * FROM \"Shopping\" WHERE id = $1", [req.params.id]);
   if (shopping_exist.rows.length <= 0) {
     return res.status(400).json("El Shopping que desea actualizar no existe.");
   }
@@ -79,10 +79,10 @@ export const updateShopping = async (req: Request, res: Response) => {
     loggsConfig.error(`${e}`);
     return res.status(500).json(e);
   }
-}
+};
 
 export const deleteShopping =  async (req: Request, res: Response) =>{
-  const shopping_exist = await pool.query(`SELECT * FROM "Shopping" WHERE id = $1`, [req.params.id]);
+  const shopping_exist = await pool.query("SELECT * FROM \"Shopping\" WHERE id = $1", [req.params.id]);
   if (shopping_exist.rows.length <= 0) {
     return res.status(400).json("El Shopping que desea eliminar no existe.");
   }
@@ -97,4 +97,4 @@ export const deleteShopping =  async (req: Request, res: Response) =>{
     loggsConfig.error(`${e}`);
     return res.status(500).json(e);
   }
-}
+};

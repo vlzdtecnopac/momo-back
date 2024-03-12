@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 import { LoggsConfig } from "../config/logs";
 import { validationResult } from "express-validator";
 import { pool } from "../config/db";
@@ -17,11 +17,11 @@ export const startSessionEmployee = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
 
-        const response = await pool.query(`SELECT employee_id, "password", state FROM "Employes"
+        const response = await pool.query(`SELECT employee_id, shopping_id, "password", state FROM "Employes"
     WHERE email = $1
     `, [email]);
 
-        if(response.rows[0] == undefined){
+        if (response.rows[0] == undefined) {
             return res.status(401).json({ msg: "No existe usuario." });
         }
 
@@ -33,9 +33,14 @@ export const startSessionEmployee = async (req: Request, res: Response) => {
             if (err) {
                 loggsConfig.error(`Error comparing passwords: $${err}`);
             } else if (match) {
-                return res.status(200).json({ token: generateAuthToken(response.rows[0].employee_id) });
+                let respJson =  {
+                    shopping_id: response.rows[0].shopping_id,
+                    state: response.rows[0].state,
+                    token: generateAuthToken(response.rows[0].employee_id) 
+                }
+                return res.status(200).json(respJson);
             } else {
-                loggsConfig.error(`Login failed. Incorrect password.`);
+                loggsConfig.error("Login failed. Incorrect password.");
             }
         });
     } catch (e) {
@@ -43,7 +48,7 @@ export const startSessionEmployee = async (req: Request, res: Response) => {
         return res.status(500).json(e);
     }
 
-}
+};
 
 export const userAllEmployeee = async (req: Request, res: Response) => {
     try {
@@ -56,7 +61,7 @@ export const userAllEmployeee = async (req: Request, res: Response) => {
         loggsConfig.error(`${e}`);
         return res.status(500).json(e);
     }
-}
+};
 
 export const userRegisterEmployee = async (req: Request, res: Response) => {
 
@@ -71,7 +76,7 @@ export const userRegisterEmployee = async (req: Request, res: Response) => {
     const salt = await bcrypt.genSalt(saltRounds);
     const hash = await bcrypt.hash(password, salt);
 
-    let employee_id = uuidv4();
+    const employee_id = uuidv4();
 
     try {
         const response = await pool.query(`
@@ -85,10 +90,10 @@ export const userRegisterEmployee = async (req: Request, res: Response) => {
         loggsConfig.error(`${e}`);
         return res.status(500).json(e);
     }
-}
+};
 
 export const userUpdateEmployee = async (req: Request, res: Response) => {
-    const user_exist = await pool.query(`SELECT * FROM "Employes" WHERE id = $1`, [req.params.id]);
+    const user_exist = await pool.query("SELECT * FROM \"Employes\" WHERE id = $1", [req.params.id]);
     if (user_exist.rows.length <= 0) {
         return res.status(400).json("El usuario no existe.");
     }
@@ -113,11 +118,11 @@ export const userUpdateEmployee = async (req: Request, res: Response) => {
         return res.status(500).json(e);
     }
 
-}
+};
 
 export const userDeleteEmployee = async (req: Request, res: Response) => {
 
-    const user_exist = await pool.query(`SELECT * FROM "Employes" WHERE id = $1`, [req.params.id]);
+    const user_exist = await pool.query("SELECT * FROM \"Employes\" WHERE id = $1", [req.params.id]);
     if (user_exist.rows.length <= 0) {
         return res.status(400).json("El usuario no existe.");
     }
@@ -133,4 +138,4 @@ export const userDeleteEmployee = async (req: Request, res: Response) => {
         return res.status(500).json(e);
     }
 
-}
+};

@@ -5,17 +5,19 @@ import validateJWT from "../middlewares/validate_jwt.middleware";
 
 const router = express.Router();
 
-router.post("/",  [
+router.post("/", [
   validateJWT,
   check("shopping_id").notEmpty().withMessage("Ingresa el ID Shopping."),
   check("nombre").notEmpty().withMessage("Ingresa el nombre del kiosko."),
   check("state").isBoolean().withMessage("Error no es boolean.")
-],KioskoController.createKiosko);
+], KioskoController.createKiosko);
 
-router.get("/", [validateJWT], KioskoController.kioskos);
+router.get("/", [validateJWT,
+  query("shopping_id").optional()
+], KioskoController.kioskos);
 
 router.delete("/:id", [validateJWT], KioskoController.deleteKiosko);
 
-router.put("/:id", [validateJWT, query('state').isBoolean().trim().withMessage("Ingrese el estado Kiosko.")], KioskoController.updateKiosko)
+router.put("/:id", [validateJWT, query("state").isBoolean().trim().withMessage("Ingrese el estado Kiosko.")], KioskoController.updateKiosko);
 
 export default router;

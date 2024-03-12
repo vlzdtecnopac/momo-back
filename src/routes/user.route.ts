@@ -13,7 +13,7 @@ router.post("/employee", [
     check("email").isEmail().withMessage("Ingresa el correo electrónico."),
     check("password").notEmpty().withMessage("Ingresa la contraseña."),
     check("state").isBoolean().withMessage("Ingresa el estado de la cuenta."),
-] , UserController.userRegisterEmployee)
+] , UserController.userRegisterEmployee);
 
 router.delete("/employee/:id", [validateJWT],UserController.userDeleteEmployee);
 
@@ -35,6 +35,6 @@ router.put("/employee/:id",[
 router.post("/employee/login",[
     check("email").isEmail().withMessage("Ingresa el correo electrónico."),
     check("password").notEmpty().withMessage("Ingresa la contraseña."),
-] ,UserController.startSessionEmployee )
+] ,UserController.startSessionEmployee );
 
 export default router;
