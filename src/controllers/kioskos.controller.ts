@@ -12,7 +12,7 @@ export const kioskos = async (req: Request, res: Response) => {
   try {
     let Query = `
     SELECT k.*, s.name_shopping FROM "Kiosko" k
-join "Shopping" s on s.shopping_id = k.shopping_id`;
+join "Shopping" s on s.shopping_id = k.shopping_id `;
     if(shopping_id != undefined){
       const arrayWehere = [];
       shopping_id == "" ? "" : arrayWehere.push({"s.shopping_id": shopping_id});
@@ -50,7 +50,7 @@ export const updateKiosko = async (req: Request, res: Response) => {
     const consult = await
       pool.query(`SELECT k.*, s.name_shopping FROM "Kiosko" k
       join "Shopping" s on s.shopping_id = k.shopping_id  WHERE k.shopping_id = $1
-      ORDER BY k.id ASC`, [localStorage.getItem("store-momo")]);
+      ORDER BY k.id ASC`, [req.query.shopping_id]);
     Server.instance.io.emit("kiosko-socket", consult.rows);
 
     return res.status(200).json(response.rows);
@@ -70,9 +70,8 @@ export const deleteKiosko = async (req: Request, res: Response) => {
 
     const response = await pool.query("DELETE FROM \"Kiosko\" WHERE id = $1", [req.params.id]);
     const consult = await pool.query(`SELECT k.*, s.name_shopping FROM "Kiosko" k
-    join "Shopping" s on s.shopping_id = k.shopping_id 
-    ORDER BY k.id ASC`);
-
+    join "Shopping" s on s.shopping_id = k.shopping_id  WHERE k.shopping_id = $1
+    ORDER BY k.id ASC`,[req.query.shopping_id]);
     Server.instance.io.emit("kiosko-socket", consult.rows);
     return res.status(200).json(response.rows);
   }catch(e){
@@ -103,8 +102,8 @@ VALUES($1, $2, $3, $4, now());
 
     const consult = await
     pool.query(`SELECT k.*, s.name_shopping FROM "Kiosko" k
-join "Shopping" s on s.shopping_id = k.shopping_id 
-ORDER BY k.id ASC`);
+join "Shopping" s on s.shopping_id = k.shopping_id  WHERE k.shopping_id = $1
+ORDER BY k.id ASC`, [shopping_id]);
     Server.instance.io.emit("kiosko-socket", consult.rows);
     return res.status(200).json(response.rows);
 

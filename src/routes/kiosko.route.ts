@@ -16,8 +16,11 @@ router.get("/", [validateJWT,
   query("shopping_id").optional()
 ], KioskoController.kioskos);
 
-router.delete("/:id", [validateJWT], KioskoController.deleteKiosko);
+router.delete("/:id", [validateJWT, query("shopping_id").notEmpty().withMessage("Ingrese la ID Shopping.")], KioskoController.deleteKiosko);
 
-router.put("/:id", [validateJWT, query("state").isBoolean().trim().withMessage("Ingrese el estado Kiosko.")], KioskoController.updateKiosko);
+router.put("/:id", [validateJWT, 
+  query("shopping_id").notEmpty().withMessage("Ingresa el ID Shopping."),
+  query("state").isBoolean().trim().withMessage("Ingrese el estado Kiosko.")
+], KioskoController.updateKiosko);
 
 export default router;
