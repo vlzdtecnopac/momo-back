@@ -31,7 +31,7 @@ export const postConfigShop =  async (req: Request, res: Response) => {
     try {
         const response = await pool.query(`INSERT INTO public."Config"
         (shopping_id, type_text, type_column, create_at)
-        VALUES('', '', '', now());`, [shopping_id, type_text, type_column]);
+        VALUES($1, $2, $3, now());`, [shopping_id, type_text, type_column]);
         return res.status(200).json(response.rows);
     } catch (e) {
         loggsConfig.error(`${e}`);
@@ -50,7 +50,7 @@ export const updateConfigShop = async (req: Request, res: Response) => {
     try {
         const response = await pool.query(`UPDATE "Config"
         SET shopping_id=$1, type_text=$2, type_column=$3, update_at=now()
-        WHERE id=$1;`, [req.params.shopping_id, type_text, type_column, update_at ]);
+        WHERE shopping_id=$1;`, [req.params.shopping_id, type_text, type_column]);
         return res.status(200).json(response.rows);
     } catch (e) {
         loggsConfig.error(`${e}`);
