@@ -21,6 +21,24 @@ export const getConfigShop = async (req: Request, res: Response) => {
     }
 }
 
+export const postConfigShop =  async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const {shopping_id, type_text, type_column} = req.body;
+  
+    try {
+        const response = await pool.query(`INSERT INTO public."Config"
+        (shopping_id, type_text, type_column, create_at)
+        VALUES('', '', '', now());`, [shopping_id, type_text, type_column]);
+        return res.status(200).json(response.rows);
+    } catch (e) {
+        loggsConfig.error(`${e}`);
+        return res.status(500).json(e);
+    }
+}
+
 export const updateConfigShop = async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

@@ -15,6 +15,10 @@ router.put("/:shopping_id", [validateJWT,
   query("type_column").notEmpty().withMessage("Ingrese el tipo de columna."),
 ], ConfigController.getConfigShop);
 
-
+router.post("/", [validateJWT,
+  check("shopping_id").notEmpty().withMessage("Ingrese la ID SHOPPING."),
+  check("type_text").notEmpty().withMessage("Ingrese el tipo de texto."),
+  check("type_column").notEmpty().withMessage("Ingrese el tipo de columna."),
+], ConfigController.postConfigShop);
 
 export default router;
