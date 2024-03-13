@@ -33,7 +33,7 @@ export const getShopping = async (req: Request, res: Response) => {
   try {
 
     let Query = `SELECT id, shopping_id, name_shopping, no_shooping, address, email, idenfication, phone, closing, "open", create_at, update_at
-    FROM public."Shopping"`;
+    FROM "Shopping"`;
 
     if(shopping_id != undefined || name_shopping != undefined || no_shooping != undefined || phone != undefined || idenfication != undefined){
       const arrayWehere = [];
@@ -62,7 +62,7 @@ export const updateShopping = async (req: Request, res: Response) => {
   }
   const {name_shopping, no_shopping, address, email, idenfication, phone} = req.body;
 
-  const shopping_exist = await pool.query("SELECT * FROM \"Shopping\" WHERE id = $1", [req.params.id]);
+  const shopping_exist = await pool.query("SELECT * FROM \"Shopping\" WHERE shopping_id = $1", [req.params.id]);
   if (shopping_exist.rows.length <= 0) {
     return res.status(400).json("El Shopping que desea actualizar no existe.");
   }
@@ -72,7 +72,7 @@ export const updateShopping = async (req: Request, res: Response) => {
     const response = await pool.query(`
     UPDATE public."Shopping"
     SET  name_shopping=$1, no_shooping=$2, address=$3, email=$4, idenfication=$5, phone=$6, update_at=now()
-    WHERE id=$7;
+    WHERE shopping_id=$7;
     `,[name_shopping, no_shopping, address, email, idenfication, phone, req.params.id]);
     return res.status(200).json(response.rows);
   } catch (e) {
@@ -82,7 +82,7 @@ export const updateShopping = async (req: Request, res: Response) => {
 };
 
 export const deleteShopping =  async (req: Request, res: Response) =>{
-  const shopping_exist = await pool.query("SELECT * FROM \"Shopping\" WHERE id = $1", [req.params.id]);
+  const shopping_exist = await pool.query("SELECT * FROM \"Shopping\" WHERE shopping_id = $1", [req.params.id]);
   if (shopping_exist.rows.length <= 0) {
     return res.status(400).json("El Shopping que desea eliminar no existe.");
   }
@@ -90,7 +90,7 @@ export const deleteShopping =  async (req: Request, res: Response) =>{
   try {
     const response = await pool.query(`
     DELETE FROM "Shopping"
-    WHERE id = $1;
+    WHERE shopping_id = $1;
     `, [req.params.id]);
     return res.status(200).json(response.rows);
   } catch (e) {
