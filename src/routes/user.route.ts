@@ -5,14 +5,13 @@ import validateJWT from "../middlewares/validate_jwt.middleware";
 const router = Router();
 
 router.post("/employee", [
-    validateJWT,
     check("shopping_id").notEmpty().withMessage("Ingresa el ID Shopping."),
     check("first_name").notEmpty().withMessage("Ingresa los nombres completos."),
     check("last_name").notEmpty().withMessage("Ingresa el apellido completo."),
     check("phone").notEmpty().withMessage("Ingresa el número telefónico."),
     check("email").isEmail().withMessage("Ingresa el correo electrónico."),
     check("password").notEmpty().withMessage("Ingresa la contraseña."),
-    check("state").isBoolean().withMessage("Ingresa el estado de la cuenta."),
+    check("state").notEmpty().withMessage("Ingrese el state").isBoolean().withMessage("Ingresa en formato boolean."),
 ], UserController.userRegisterEmployee);
 
 router.delete("/employee/:id", [validateJWT], UserController.userDeleteEmployee);
@@ -27,7 +26,7 @@ router.put("/employee/:employee_id", [
     check("phone").notEmpty().withMessage("Ingresa el número telefónico."),
     check("email").isEmail().withMessage("Ingresa el correo electrónico."),
     check("password").notEmpty().withMessage("Ingresa la contraseña."),
-    check("state").optional().isBoolean(),
+    check("state").isBoolean().withMessage("Ingresa el state."),
 ], UserController.userUpdateEmployee);
 
 

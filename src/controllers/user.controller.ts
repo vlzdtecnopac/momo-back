@@ -84,7 +84,6 @@ export const userRegisterEmployee = async (req: Request, res: Response) => {
 
     const { shopping_id, first_name, last_name, phone, email, password, state } = req.body;
 
-
     const salt = await bcrypt.genSalt(saltRounds);
     const hash = await bcrypt.hash(password, salt);
 

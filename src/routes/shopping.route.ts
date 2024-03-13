@@ -7,7 +7,6 @@ import validateJWT from "../middlewares/validate_jwt.middleware";
 const router = express.Router();
 
 router.post("/", [
-    validateJWT,
     check("name_shopping").notEmpty().withMessage("Ingresa  el nombre de la tienda no puede estar vacio."),
     check("no_shopping").isNumeric().notEmpty().withMessage("Ingresa el número de la tienda."),
     check("address").notEmpty().withMessage("Ingresa la dirección."),
