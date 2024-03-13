@@ -19,7 +19,7 @@ router.delete("/employee/:id", [validateJWT], UserController.userDeleteEmployee)
 
 router.get("/employee", [validateJWT], UserController.userAllEmployeee);
 
-router.put("/employee/:id", [
+router.put("/employee/:employee_id", [
     validateJWT,
     check("shopping_id").notEmpty().withMessage("Ingresa el ID Shopping."),
     check("first_name").notEmpty().withMessage("Ingresa los nombres completos."),

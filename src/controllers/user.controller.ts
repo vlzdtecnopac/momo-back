@@ -18,7 +18,7 @@ export const startSessionEmployee = async (req: Request, res: Response) => {
         const { email, password } = req.body;
 
         const response = await pool.query(`SELECT employee_id, shopping_id, "password", state FROM "Employes"
-    WHERE email = $1
+    WHERE email=$1
     `, [email]);
 
         if (response.rows[0] == undefined) {
@@ -105,7 +105,7 @@ export const userRegisterEmployee = async (req: Request, res: Response) => {
 };
 
 export const userUpdateEmployee = async (req: Request, res: Response) => {
-    const user_exist = await pool.query("SELECT * FROM \"Employes\" WHERE id = $1", [req.params.id]);
+    const user_exist = await pool.query("SELECT * FROM \"Employes\" WHERE employee_id=$1", [req.params.id]);
     if (user_exist.rows.length <= 0) {
         return res.status(400).json("El usuario no existe.");
     }
@@ -122,7 +122,7 @@ export const userUpdateEmployee = async (req: Request, res: Response) => {
         const response = await pool.query(`
         UPDATE "Employes"
         SET shopping_id=$2, first_name=$4, last_name=$5, phone=$6, email=$7, state=$8 "password"=$8, update_at=now()
-        WHERE id=$1;
+        WHERE employee_id=$1;
         `, [req.params.id, shopping_id, first_name, last_name, phone, email, state, hash]);
         return res.status(200).json(response.rows);
     } catch (e) {
@@ -134,7 +134,7 @@ export const userUpdateEmployee = async (req: Request, res: Response) => {
 
 export const userDeleteEmployee = async (req: Request, res: Response) => {
 
-    const user_exist = await pool.query("SELECT * FROM \"Employes\" WHERE id = $1", [req.params.id]);
+    const user_exist = await pool.query("SELECT * FROM \"Employes\" WHERE employee_id=$1", [req.params.id]);
     if (user_exist.rows.length <= 0) {
         return res.status(400).json("El usuario no existe.");
     }
@@ -142,7 +142,7 @@ export const userDeleteEmployee = async (req: Request, res: Response) => {
     try {
         const response = await pool.query(`
         DELETE FROM "Employes"
-        WHERE id=$1;
+        WHERE employee_id=$1;
         `, [req.params.id]);
         return res.status(200).json(response.rows);
     } catch (e) {
