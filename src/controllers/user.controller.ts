@@ -53,13 +53,13 @@ export const startSessionEmployee = async (req: Request, res: Response) => {
 
 export const userAllEmployeee = async (req: Request, res: Response) => {
     try {
-        let Query = `SELECT id, employee_id, shopping_id, kiosko_id, first_name, last_name, phone, email, "password", create_at, update_at
+        let Query = `SELECT id, employee_id, shopping_id, first_name, last_name, phone, email, "password", create_at, update_at
         FROM "Employes"
         `;
 
-        const {shopping_id, employee_id, kiosko_id} = req.query;
+        const {shopping_id, employee_id} = req.query;
 
-        if(shopping_id != undefined || employee_id != undefined || kiosko_id != undefined){
+        if(shopping_id != undefined || employee_id != undefined){
             const arrayWehere = [];
             shopping_id == "" ? "" : arrayWehere.push({"shopping_id": shopping_id});
             employee_id == "" ? "" : arrayWehere.push({"employee_id": employee_id});
@@ -115,15 +115,15 @@ export const userUpdateEmployee = async (req: Request, res: Response) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { shopping_id, kiosko_id, first_name, last_name, phone, email, state, password } = req.body;
+    const { shopping_id,  first_name, last_name, phone, email, state, password } = req.body;
     const salt = await bcrypt.genSalt(saltRounds);
     const hash = await bcrypt.hash(password, salt);
     try {
         const response = await pool.query(`
         UPDATE "Employes"
-        SET shopping_id=$2, kiosko_id=$3, first_name=$4, last_name=$5, phone=$6, email=$7, state=$8 "password"=$8, update_at=now()
+        SET shopping_id=$2, first_name=$4, last_name=$5, phone=$6, email=$7, state=$8 "password"=$8, update_at=now()
         WHERE id=$1;
-        `, [req.params.id, shopping_id, kiosko_id, first_name, last_name, phone, email, state, hash]);
+        `, [req.params.id, shopping_id, first_name, last_name, phone, email, state, hash]);
         return res.status(200).json(response.rows);
     } catch (e) {
         loggsConfig.error(`${e}`);

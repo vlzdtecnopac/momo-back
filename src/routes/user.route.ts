@@ -22,7 +22,6 @@ router.get("/employee", [validateJWT], UserController.userAllEmployeee);
 router.put("/employee/:id", [
     validateJWT,
     check("shopping_id").notEmpty().withMessage("Ingresa el ID Shopping."),
-    check("kiosko_id").optional(),
     check("first_name").notEmpty().withMessage("Ingresa los nombres completos."),
     check("last_name").notEmpty().withMessage("Ingresa el apellido completo."),
     check("phone").notEmpty().withMessage("Ingresa el número telefónico."),
