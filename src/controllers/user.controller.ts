@@ -63,8 +63,7 @@ export const userAllEmployeee = async (req: Request, res: Response) => {
             const arrayWehere = [];
             shopping_id == "" ? "" : arrayWehere.push({"shopping_id": shopping_id});
             employee_id == "" ? "" : arrayWehere.push({"employee_id": employee_id});
-            kiosko_id == "" ? "" : arrayWehere.push({"kiosko_id":  kiosko_id});
-
+       
             const result_consult = arrayWehere.map(item => ` ${Object.keys(item)} = '${Object.values(item)}'`).join("OR");
             Query += ` WHERE ${result_consult}`;
           }
