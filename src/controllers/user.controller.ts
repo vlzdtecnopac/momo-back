@@ -54,7 +54,7 @@ export const startSessionEmployee = async (req: Request, res: Response) => {
 export const userAllEmployeee = async (req: Request, res: Response) => {
     try {
         let Query = `SELECT id, employee_id, shopping_id, kiosko_id, first_name, last_name, phone, email, "password", create_at, update_at
-        FROM "Employes";
+        FROM "Employes"
         `;
 
         const {shopping_id, employee_id, kiosko_id} = req.query;
@@ -63,13 +63,12 @@ export const userAllEmployeee = async (req: Request, res: Response) => {
             const arrayWehere = [];
             shopping_id == "" ? "" : arrayWehere.push({"shopping_id": shopping_id});
             employee_id == "" ? "" : arrayWehere.push({"employee_id": employee_id});
-            kiosko_id == "" ? "" : arrayWehere.push({" kiosko_id":  kiosko_id});
-            
+            kiosko_id == "" ? "" : arrayWehere.push({"kiosko_id":  kiosko_id});
+
             const result_consult = arrayWehere.map(item => ` ${Object.keys(item)} = '${Object.values(item)}'`).join("OR");
             Query += ` WHERE ${result_consult}`;
           }
         const response = await pool.query(Query);
-
         return res.status(200).json(response.rows);
     } catch (e) {
         loggsConfig.error(`${e}`);
