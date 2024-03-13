@@ -12,7 +12,7 @@ export const kioskos = async (req: Request, res: Response) => {
   try {
     let Query = `
     SELECT k.*, s.name_shopping FROM "Kiosko" k
-join "Shopping" s on s.shopping_id = k.shopping_id `;
+join "Shopping" s on s.shopping_id = k.shopping_id  `;
     if(shopping_id != undefined){
       const arrayWehere = [];
 

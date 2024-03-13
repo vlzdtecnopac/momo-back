@@ -31,7 +31,6 @@ router.put("/employee/:id", [
     check("state").optional().isBoolean(),
 ], UserController.userUpdateEmployee);
 
-router.put("/employee/kiosko/:id", [validateJWT, check("kiosko_id").notEmpty().withMessage("Ingresa el ID KIOSKO")], UserController.userUpdateKioskoEmployee)
 
 router.post("/employee/login", [
     check("email").isEmail().withMessage("Ingresa el correo electrónico."),

@@ -12,7 +12,7 @@ const socketController = (socket: Socket) => {
     // Handle custom events or messages from the client
     socket.on("kiosko-socket", async (msg) => {
       const response = await pool.query(`SELECT k.*, s.name_shopping FROM "Kiosko" k
-      join "Shopping" s on s.shopping_id = k.shopping_id WHERE k.shopping_id = $1
+      join "Shopping" s on s.shopping_id = k.shopping_id WHERE k.shopping_id = $1 AND k.state = true
       ORDER BY k.id ASC`, [msg.shopping_id]);
       // Broadcast the message to all connected clients
       socket.emit("kiosko-socket", response.rows);

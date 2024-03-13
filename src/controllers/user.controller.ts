@@ -153,28 +153,3 @@ export const userDeleteEmployee = async (req: Request, res: Response) => {
 
 };
 
-export const userUpdateKioskoEmployee = async (req: Request, res: Response) => {
-    const user_exist = await pool.query("SELECT * FROM \"Employes\" WHERE employee_id = $1", [req.params.id]);
-    if (user_exist.rows.length <= 0) {
-        return res.status(400).json("El usuario no existe.");
-    }
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-  
-    const {kiosko_id} = req.body;
-  
-    try {
-        const response = await pool.query(`
-        UPDATE "Employes"
-        SET kiosko_id=$2, update_at=now()
-        WHERE employee_id=$1;
-        `, [req.params.id, kiosko_id]);
-        return res.status(200).json(response.rows);
-    } catch (e) {
-        loggsConfig.error(`${e}`);
-        return res.status(500).json(e);
-    }
-  }
