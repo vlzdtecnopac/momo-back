@@ -19,6 +19,11 @@
             "date": 1710220086471,
             "name": "log/all/all-2024-03-12.log",
             "hash": "d11bad05b2c5beba3365a0b94709f1939b73250f6537d5173d0fa29383e68028"
+        },
+        {
+            "date": 1710307433524,
+            "name": "log/all/all-2024-03-13.log",
+            "hash": "b11e8b260b0ad2743e7d99ed8b8ea1e33db65b69ba3b447505b6bf9fa1b77e43"
         }
     ],
     "hashType": "sha256"

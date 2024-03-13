@@ -1,4 +1,4 @@
-import {Router} from "express";
+import { Router } from "express";
 import * as UserController from "../controllers/user.controller";
 import { check } from "express-validator";
 import validateJWT from "../middlewares/validate_jwt.middleware";
@@ -13,13 +13,13 @@ router.post("/employee", [
     check("email").isEmail().withMessage("Ingresa el correo electrónico."),
     check("password").notEmpty().withMessage("Ingresa la contraseña."),
     check("state").isBoolean().withMessage("Ingresa el estado de la cuenta."),
-] , UserController.userRegisterEmployee);
+], UserController.userRegisterEmployee);
 
-router.delete("/employee/:id", [validateJWT],UserController.userDeleteEmployee);
+router.delete("/employee/:id", [validateJWT], UserController.userDeleteEmployee);
 
 router.get("/employee", [validateJWT], UserController.userAllEmployeee);
 
-router.put("/employee/:id",[
+router.put("/employee/:id", [
     validateJWT,
     check("shopping_id").notEmpty().withMessage("Ingresa el ID Shopping."),
     check("kiosko_id").optional(),
@@ -29,12 +29,13 @@ router.put("/employee/:id",[
     check("email").isEmail().withMessage("Ingresa el correo electrónico."),
     check("password").notEmpty().withMessage("Ingresa la contraseña."),
     check("state").optional().isBoolean(),
-],UserController.userUpdateEmployee);
+], UserController.userUpdateEmployee);
 
+router.put("/employee/kiosko/:id", [validateJWT, check("kiosko_id").notEmpty().withMessage("Ingresa el ID KIOSKO")], UserController.userUpdateKioskoEmployee)
 
-router.post("/employee/login",[
+router.post("/employee/login", [
     check("email").isEmail().withMessage("Ingresa el correo electrónico."),
     check("password").notEmpty().withMessage("Ingresa la contraseña."),
-] ,UserController.startSessionEmployee );
+], UserController.startSessionEmployee);
 
 export default router;
