@@ -34,6 +34,7 @@ export const startSessionEmployee = async (req: Request, res: Response) => {
                 loggsConfig.error(`Error comparing passwords: $${err}`);
             } else if (match) {
                 let respJson =  {
+                    employee_id: response.rows[0].employee_id,
                     shopping_id: response.rows[0].shopping_id,
                     state: response.rows[0].state,
                     token: generateAuthToken(response.rows[0].employee_id) 
