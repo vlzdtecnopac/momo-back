@@ -98,3 +98,31 @@ export const deleteShopping =  async (req: Request, res: Response) =>{
     return res.status(500).json(e);
   }
 };
+
+export const updateCloseShopping =  async (req: Request, res: Response) =>{
+  try{
+    const response = await pool.query(`
+    UPDATE "Shopping"
+SET closing=now(), update_at=now()
+WHERE id=$1;
+    `, [req.params.shopping_id]);
+    return res.status(200).json(response.rows);
+  }catch(e){
+    loggsConfig.error(`${e}`);
+    return res.status(500).json(e);
+  }
+}
+
+export const updateOpenShopping =  async (req: Request, res: Response) =>{
+  try{
+    const response = await pool.query(`
+    UPDATE "Shopping"
+SET "open"=now(), update_at=now()
+WHERE id=$1;
+    `, [req.params.shopping_id]);
+    return res.status(200).json(response.rows);
+  }catch(e){
+    loggsConfig.error(`${e}`);
+    return res.status(500).json(e);
+  }
+}

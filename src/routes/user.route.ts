@@ -35,4 +35,5 @@ router.post("/employee/login", [
     check("password").notEmpty().withMessage("Ingresa la contraseña."),
 ], UserController.startSessionEmployee);
 
+
 export default router;
