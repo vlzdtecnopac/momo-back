@@ -32,7 +32,7 @@ class Server {
   private ioOptions = {
     // options go here
     cors: {
-      origin: process.env.REACT_APP_FROND_URL,
+      origin: "*",
       methods: ["GET", "POST"]
     }
   };
