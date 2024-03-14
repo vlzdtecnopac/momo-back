@@ -7,7 +7,6 @@ if (process.env.NODE_ENV === "development") {
 }
 
 export const generateAuthToken = (Id: string) => {
-    console.log(process.env.SECRETORPRIVATEKEY);
     const secretKey: jwt.Secret = process.env.SECRETORPRIVATEKEY || "MOMO123456";
     const expiresIn = "8h";
   

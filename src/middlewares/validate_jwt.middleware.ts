@@ -4,6 +4,13 @@ import { LoggsConfig } from "../config/logs";
 import { pool } from "../config/db";
 const loggsConfig: LoggsConfig = new LoggsConfig();
 
+if (process.env.NODE_ENV === "development") {
+    require('dotenv').config({ path: ".env.development" });
+} else if (process.env.NODE_ENV === "production") {
+    require('dotenv').config({ path: ".env.production" });
+}
+
+
 const validateJWT = async (req: Request, res: Response, next: NextFunction) => {
 
     const token = req.header("x-token");
