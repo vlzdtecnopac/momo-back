@@ -1,6 +1,13 @@
 import * as jwt from "jsonwebtoken";
 
+if (process.env.NODE_ENV === "development") {
+    require('dotenv').config({ path: ".env.development" });
+} else if (process.env.NODE_ENV === "production") {
+    require('dotenv').config({ path: ".env.production" });
+}
+
 export const generateAuthToken = (Id: string) => {
+    console.log(process.env.SECRETORPRIVATEKEY);
     const secretKey: jwt.Secret = process.env.SECRETORPRIVATEKEY || "MOMO123456";
     const expiresIn = "8h";
   
