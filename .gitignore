@@ -33,3 +33,6 @@ dist/**/*
 
 # ignore yarn.lock
 yarn.lock
+
+# File ignore Temp
+uploads
