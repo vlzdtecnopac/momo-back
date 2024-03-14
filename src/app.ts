@@ -16,6 +16,7 @@ export const paths = {
   home: "/",
   users: "/users",
   config: "/config",
+  product: "/product",
   shooping: "/shopping",
   kioskos: "/kioskos",
 };
@@ -80,6 +81,7 @@ class Server {
     app.use(paths.home, API_ROUTER.homeRouter);
     app.use(paths.users, API_ROUTER.userRouter);
     app.use(paths.config, API_ROUTER.configRouter);
+    app.use(paths.product, API_ROUTER.productRouter);
     app.use(paths.kioskos, API_ROUTER.kioskoRouter);
     app.use(paths.shooping, API_ROUTER.shoppingRouter);
   }

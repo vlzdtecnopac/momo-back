@@ -17,10 +17,10 @@ export const createShopping = async (req: Request, res: Response) => {
     const response = await pool.query(`
         INSERT INTO "Shopping" (
           shopping_id, name_shopping, no_shooping, address, email, idenfication, phone, create_at
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, now());
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, now()) RETURNING shopping_id;
       `, [uuidv4(), name_shopping, no_shopping, address, email, idenfication, phone]);
 
-    return res.status(200).json(response.rows);
+    return res.status(200).json(response.rows[0]);
   } catch (e) {
     loggsConfig.error(`${e}`);
     return res.status(500).json(e);
