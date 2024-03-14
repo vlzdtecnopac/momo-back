@@ -61,9 +61,9 @@ class Server {
 
   initConfig() {
     if (process.env.NODE_ENV === "development") {
-      dotenv.config({ path: ".env.development" });
+      require("dotenv").config({ path: ".env.development" });
     } else if (process.env.NODE_ENV === "production") {
-      dotenv.config({ path: ".env.production" });
+      require("dotenv").config({ path: ".env.production" });
     }
     this.app.set("port", process.env.PORT || 3000);
     this.app.set("views", path.join(__dirname, "../../views"));

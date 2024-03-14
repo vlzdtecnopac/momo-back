@@ -2,12 +2,6 @@ import { Request, Response } from "express";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import fs from "fs";
 
-if (process.env.NODE_ENV === "development") {
-    require('dotenv').config({ path: ".env.development" });
-} else if (process.env.NODE_ENV === "production") {
-    require('dotenv').config({ path: ".env.production" });
-}
-
 const accessKeyId: any = process.env.AWS_PUBLIC_KEY;
 const secretAccessKey: any = process.env.AWS_SECRET_KEY;
 const region: any = process.env.AWS_BUCKET_REGION;
