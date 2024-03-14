@@ -11,14 +11,16 @@ import * as http from "http";
 import * as socketIO from "socket.io";
 import { LoggsConfig } from "./config/logs";
 import socketController from "./sockets/sockets.controller";
+import fileUpload from "express-fileupload";
 
 export const paths = {
   home: "/",
-  users: "/users",
   config: "/config",
+  file: "/file",
   product: "/product",
-  shooping: "/shopping",
   kioskos: "/kioskos",
+  shooping: "/shopping",
+  users: "/users",
 };
 
 
@@ -66,6 +68,12 @@ class Server {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
     this.app.use(cors({ origin: true, credentials: true }));
+    this.app.use(
+      fileUpload({
+        useTempFiles: true,
+        tempFileDir: "./uploads"
+    })
+    );
     this.app.use(passport.initialize());
     this.rutasConfig(this.app);
 
@@ -84,6 +92,7 @@ class Server {
     app.use(paths.product, API_ROUTER.productRouter);
     app.use(paths.kioskos, API_ROUTER.kioskoRouter);
     app.use(paths.shooping, API_ROUTER.shoppingRouter);
+    app.use(paths.file, API_ROUTER.fileRouter);
   }
 
   socketConfig() {

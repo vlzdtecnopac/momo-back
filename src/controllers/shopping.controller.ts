@@ -111,7 +111,7 @@ WHERE shopping_id=$1;
     loggsConfig.error(`${e}`);
     return res.status(500).json(e);
   }
-}
+};
 
 export const updateOpenShopping =  async (req: Request, res: Response) =>{
   try{
@@ -125,4 +125,4 @@ WHERE shopping_id=$1;
     loggsConfig.error(`${e}`);
     return res.status(500).json(e);
   }
-}
+};

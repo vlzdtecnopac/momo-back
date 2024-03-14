@@ -19,7 +19,7 @@ export const getConfigShop = async (req: Request, res: Response) => {
         loggsConfig.error(`${e}`);
         return res.status(500).json(e);
     }
-}
+};
 
 export const postConfigShop =  async (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -37,7 +37,7 @@ export const postConfigShop =  async (req: Request, res: Response) => {
         loggsConfig.error(`${e}`);
         return res.status(500).json(e);
     }
-}
+};
 
 export const updateConfigShop = async (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -56,4 +56,4 @@ export const updateConfigShop = async (req: Request, res: Response) => {
         loggsConfig.error(`${e}`);
         return res.status(500).json(e);
     }
-}
+};

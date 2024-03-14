@@ -11,5 +11,5 @@ export const createProduct = (req: Request, res: Response) => {
       return res.status(400).json({ errors: errors.array() });
     }
     
-    return res.status(200).json({msg: "Wordking create product!!"})
-}
+    return res.status(200).json({msg: "Wordking create product!!"});
+};

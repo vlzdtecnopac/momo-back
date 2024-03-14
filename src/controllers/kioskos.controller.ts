@@ -24,7 +24,7 @@ join "Shopping" s on s.shopping_id = k.shopping_id  `;
       Query += ` WHERE ${result_consult}`;
     }
 
-    Query += ` ORDER BY k.id ASC`;
+    Query += " ORDER BY k.id ASC";
 
     const response = await
       pool.query(Query);

@@ -33,12 +33,12 @@ export const startSessionEmployee = async (req: Request, res: Response) => {
             if (err) {
                 loggsConfig.error(`Error comparing passwords: $${err}`);
             } else if (match) {
-                let respJson =  {
+                const respJson =  {
                     employee_id: response.rows[0].employee_id,
                     shopping_id: response.rows[0].shopping_id,
                     state: response.rows[0].state,
                     token: generateAuthToken(response.rows[0].employee_id) 
-                }
+                };
                 return res.status(200).json(respJson);
             } else {
                 loggsConfig.error("Login failed. Incorrect password.");
