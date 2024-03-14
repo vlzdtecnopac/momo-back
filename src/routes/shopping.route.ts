@@ -36,7 +36,7 @@ router.get("/", [
 
 router.delete("/:id", [validateJWT], ShoppingController.deleteShopping);
 
-router.put("/shopping/close/:shopping_id", [validateJWT], ShoppingController.updateCloseShopping);
-router.put("/shopping/open/:shopping_id", [validateJWT], ShoppingController.updateOpenShopping);
+router.put("/close/:shopping_id", [validateJWT], ShoppingController.updateCloseShopping);
+router.put("/open/:shopping_id", [validateJWT], ShoppingController.updateOpenShopping);
 
 export default router;
