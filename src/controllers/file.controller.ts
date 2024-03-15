@@ -4,7 +4,7 @@ import { deleteFileUrl, getFileGenerateURL, getFilesURL, uploadFileArchive } fro
 export const uploadFile = async (req: Request, res: Response) => {
     try {
         if (!req.files || !req.files.file) {
-            return res.status(400).json({ error: "No se ha subido ningún archivo" });
+            return res.status(400).json({ msg: "No se ha subido ningún archivo" });
         }
         const file = req.files.file;
         await uploadFileArchive(file);
