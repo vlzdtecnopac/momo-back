@@ -29,7 +29,7 @@ export const deleteCategory = async(req: Request, res: Response) => {
 
     try {
         let Query = `DELETE FROM public."Category"
-        WHERE category_id=$1; RETURNING category_id;
+        WHERE category_id=$1 RETURNING category_id;
     `;
         const response = await pool.query(Query, [req.params.category_id]);
         return res.status(200).json(response.rows[0]);
