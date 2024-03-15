@@ -137,22 +137,29 @@ export const activeKioskoAuto = async (req: Request, res: Response) => {
     FROM "Shopping" s 
   join "Kiosko" k on k.shopping_id = s.shopping_id  
   WHERE s.shopping_id = $1 and k.state = $2;`, [req.query.shopping_id, req.query.state]);
-
     let kiosko_inactives = response.rows;
-
-    kiosko_inactives.map(async (item, i: number) => {
-      const {kiosko:{data}} = item;
-     
-      if (!data?.state) {
-        console.log(data.kiosko_id);
-        let SQL = `UPDATE public."Kiosko"
+    if (kiosko_inactives.length > 0) {
+      kiosko_inactives.map(async (item, i: number) => {
+        const { kiosko: { data } } = item;
+        if (!data?.state && i == 0) {
+          console.log(data.kiosko_id);
+          let SQL = `UPDATE public."Kiosko"
         SET kiosko_id=$1, shopping_id=$2, state=$3, nombre=$4, update_at=now()
-        WHERE kiosko_id=$1  RETURNING kiosko_id;
+        WHERE kiosko_id=$1 RETURNING kiosko_id;
         `
-        const response = await pool.query(SQL, [data?.kiosko_id, data?.shopping_id, true, data?.nombre]);
-        return res.status(200).json(response.rows[0]);
-      }
-    });
+          const response = await pool.query(SQL, [data?.kiosko_id, data?.shopping_id, true, data?.nombre]);
+          
+          const consult = await
+          pool.query(`SELECT k.*, s.name_shopping FROM "Kiosko" k
+    join "Shopping" s on s.shopping_id = k.shopping_id  WHERE k.shopping_id = $1
+    ORDER BY k.id ASC`, [data?.shopping_id]);
+        Server.instance.io.emit("kiosko-socket", consult.rows);
+          return res.status(200).json(response.rows[0]);
+        }
+      });
+    }else{
+      return res.status(400).json({ msg: "No hay kioskos dispobles por activar." });
+    }
   } catch (e) {
     loggsConfig.error(`${e}`);
     return res.status(500).json(e);
