@@ -6,6 +6,19 @@ import { validationResult } from "express-validator";
 
 const loggsConfig: LoggsConfig = new LoggsConfig();
 
+export const getCategoryAll = async (req: Request, res: Response) => {
+    try {
+        let Query = `SELECT id, category_id, name_category, create_at, update_at
+        FROM "Category";
+    `;
+        const response = await pool.query(Query);
+        return res.status(200).json(response.rows);
+    } catch (e) {
+        loggsConfig.error(`${e}`);
+        return res.status(500).json(e);
+    }
+}
+
 export const updateCategory = async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

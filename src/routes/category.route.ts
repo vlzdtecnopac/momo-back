@@ -5,6 +5,8 @@ import validateJWT from "../middlewares/validate_jwt.middleware";
 
 const router = express.Router();
 
+router.get('/', [validateJWT], CategoryController.getCategoryAll)
+
 router.post('/', [validateJWT,
     check("name_category").notEmpty().withMessage("Ingresa el nombre Categoria")
 ], CategoryController.crearCategory)
