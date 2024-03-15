@@ -66,7 +66,6 @@ export async function deleteFileUrl(fileName: any){
     
         const command = new DeleteObjectCommand(params);
         await s3Client.send(command);
-        
        return `Imagen ${fileName} eliminada exitosamente.`;
       } catch (error) {
         return 'Error al eliminar la imagen:' +  error;

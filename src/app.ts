@@ -16,6 +16,7 @@ import fileUpload from "express-fileupload";
 export const paths = {
   home: "/",
   config: "/config",
+  category: "/category",
   file: "/file",
   product: "/product",
   kioskos: "/kioskos",
@@ -87,6 +88,7 @@ class Server {
     app.use(paths.home, API_ROUTER.homeRouter);
     app.use(paths.users, API_ROUTER.userRouter);
     app.use(paths.config, API_ROUTER.configRouter);
+    app.use(paths.category, API_ROUTER.categoryRouter);
     app.use(paths.product, API_ROUTER.productRouter);
     app.use(paths.kioskos, API_ROUTER.kioskoRouter);
     app.use(paths.shooping, API_ROUTER.shoppingRouter);

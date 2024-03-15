@@ -5,11 +5,20 @@ import { LoggsConfig } from "../config/logs";
 import { validationResult } from "express-validator";
 import Server from "../app";
 
-export const createProduct = (req: Request, res: Response) => {
+export const createProduct = async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+
+    const { category_id, name_product, description, state} =  req.body;
     
-    return res.status(200).json({msg: "Wordking create product!!"});
+    let Query = `INSERT INTO public."Product"
+    (product_id, category_id, name_product, image, description, state, create_at)
+    VALUES('$1', '$2', '$3', '$4', '$5', false, now()) RETURNING category_id;
+    `;
+
+    const response = await pool.query(Query, [uuidv4(), category_id, name_product, ,description, state]);
+
+    return res.status(200).json(response.rows[0]);
 };
