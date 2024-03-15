@@ -45,13 +45,13 @@ export const updateKiosko = async (req: Request, res: Response) => {
   const {shopping_id, state} = req.body;
 
   try {
-    const kiosko_exist = await pool.query("SELECT * FROM \"Kiosko\" WHERE kiosko_id = $1", [req.params.id]);
+    const kiosko_exist = await pool.query("SELECT * FROM \"Kiosko\" WHERE kiosko_id = $1", [req.params.kiosko_id]);
     if (kiosko_exist.rows.length <= 0) {
       return res.status(400).json("El kiosko que desea actualizar no existe.");
     }
     const response = await pool.query(`UPDATE "Kiosko"
     SET  state=$1, shopping_id=$2, update_at=now()
-    WHERE kiosko_id=$3`, [state, shopping_id, req.params.id]);
+    WHERE kiosko_id=$3`, [state, shopping_id, req.params.kiosko_id]);
 
     const consult = await
       pool.query(`SELECT k.*, s.name_shopping FROM "Kiosko" k
@@ -68,12 +68,12 @@ export const updateKiosko = async (req: Request, res: Response) => {
 
 export const deleteKiosko = async (req: Request, res: Response) => {
   try{
-    const kiosko_exist = await pool.query("SELECT * FROM \"Kiosko\" WHERE kiosko_id = $1", [req.params.id]);
+    const kiosko_exist = await pool.query("SELECT * FROM \"Kiosko\" WHERE kiosko_id = $1", [req.params.kiosko_id]);
     if (kiosko_exist.rows.length <= 0) {
       return res.status(400).json("El kiosko que desea eliminar no existe.");
     }
 
-    const response = await pool.query("DELETE FROM \"Kiosko\" WHERE kiosko_id = $1", [req.params.id]);
+    const response = await pool.query("DELETE FROM \"Kiosko\" WHERE kiosko_id = $1", [req.params.kiosko_id]);
     const consult = await pool.query(`SELECT k.*, s.name_shopping FROM "Kiosko" k
     join "Shopping" s on s.shopping_id = k.shopping_id  WHERE k.shopping_id = $1 AND state=true
     ORDER BY k.id ASC`,[req.query.shopping_id]);

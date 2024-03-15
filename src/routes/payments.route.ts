@@ -11,5 +11,16 @@ router.post("/", [
     check("card").isBoolean().withMessage("Tiene que ser Boolean").notEmpty().withMessage("Ingresa si cubre credito."),
     check("shopping_id").notEmpty().withMessage("Ingresa el ID Shopping."),
   ], PaymentsController.createPaymentsMethod);
+
+  router.put("/:payment_id", [
+    validateJWT,
+    check("effecty").isBoolean().withMessage("Tiene que ser Boolean").notEmpty().withMessage("Ingresa si cubre débito o efectivo."),
+    check("card").isBoolean().withMessage("Tiene que ser Boolean").notEmpty().withMessage("Ingresa si cubre credito."),
+    check("shopping_id").notEmpty().withMessage("Ingresa el ID Shopping."),
+  ], PaymentsController.updatePaymentsMethod);
+
+  router.delete("/:payment_id", [
+    validateJWT
+  ], PaymentsController.deletePaymentsMethod);
   
 export default router;

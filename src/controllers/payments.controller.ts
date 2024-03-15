@@ -26,3 +26,47 @@ export const createPaymentsMethod = async (req: Request, res: Response) => {
         return res.status(500).json(e);
     }
 }
+
+export const updatePaymentsMethod = async (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const payments_exist = await pool.query("SELECT * FROM \"Payments\" WHERE payment_id = $1", [req.params.payment_id]);
+  if (payments_exist.rows.length <= 0) {
+    return res.status(400).json("El metodo payment que desea actualizar no existe.");
+  }
+
+  const {effecty, card, shopping_id} = req.body;
+  try{
+  let Query = `UPDATE "Payments"
+  SET effecty=$1, card=$2, shopping_id=$3, create_at=now()
+  WHERE payment_id=$4  RETURNING payment_id;`;
+
+  const response = await pool.query(Query, [effecty, card, shopping_id, req.params.payment_id]);
+
+  return res.status(200).json(response.rows[0]);
+  }catch(e){
+      loggsConfig.error(`${e}`);
+      return res.status(500).json(e);
+  }
+}
+
+export const deletePaymentsMethod =  async (req: Request, res: Response) => {
+  try{
+    const payments_exist = await pool.query("SELECT * FROM \"Payments\" WHERE payment_id = $1", [req.params.payment_id]);
+    if (payments_exist.rows.length <= 0) {
+      return res.status(400).json("El metodo payment que desea eliminar no existe.");
+    }
+
+    let Query = `DELETE FROM "Payments" WHERE paymemt_id=$1 RETURNING payment_id;`;
+  
+    const response = await pool.query(Query, [req.params.payment_id]);
+  
+    return res.status(200).json(response.rows[0]);
+    }catch(e){
+        loggsConfig.error(`${e}`);
+        return res.status(500).json(e);
+    }
+}
