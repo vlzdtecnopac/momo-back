@@ -35,7 +35,7 @@ export const deleteCategory = async (req: Request, res: Response) => {
    `, [category_id]);
 
         if (category_exist.rows.length <= 0) {
-            return res.status(400).json("La categoria que desea eliminar no existe.");
+            return res.status(400).json({msg: "La categoria que desea eliminar no existe."});
         }
 
 

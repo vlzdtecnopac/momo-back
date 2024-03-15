@@ -64,7 +64,7 @@ export const updateShopping = async (req: Request, res: Response) => {
 
   const shopping_exist = await pool.query("SELECT * FROM \"Shopping\" WHERE shopping_id = $1", [req.params.id]);
   if (shopping_exist.rows.length <= 0) {
-    return res.status(400).json("El Shopping que desea actualizar no existe.");
+    return res.status(400).json({msg:"El Shopping que desea actualizar no existe."});
   }
 
 
@@ -84,7 +84,7 @@ export const updateShopping = async (req: Request, res: Response) => {
 export const deleteShopping =  async (req: Request, res: Response) =>{
   const shopping_exist = await pool.query("SELECT * FROM \"Shopping\" WHERE shopping_id = $1", [req.params.id]);
   if (shopping_exist.rows.length <= 0) {
-    return res.status(400).json("El Shopping que desea eliminar no existe.");
+    return res.status(400).json({msg:"El Shopping que desea eliminar no existe."});
   }
 
   try {

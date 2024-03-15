@@ -56,7 +56,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
 `, [product_id]);
 
   if (product_exist.rows.length <= 0) {
-    return res.status(400).json("El producto que desea eliminar no existe.");
+    return res.status(400).json({msg:"El producto que desea eliminar no existe."});
   }
 
   try {

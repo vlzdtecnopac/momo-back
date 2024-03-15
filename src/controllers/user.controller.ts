@@ -106,7 +106,7 @@ export const userRegisterEmployee = async (req: Request, res: Response) => {
 export const userUpdateEmployee = async (req: Request, res: Response) => {
     const user_exist = await pool.query("SELECT * FROM \"Employes\" WHERE employee_id=$1", [req.params.id]);
     if (user_exist.rows.length <= 0) {
-        return res.status(400).json("El usuario no existe.");
+        return res.status(400).json({msg: "El usuario no existe."});
     }
 
     const errors = validationResult(req);
@@ -135,7 +135,7 @@ export const userDeleteEmployee = async (req: Request, res: Response) => {
 
     const user_exist = await pool.query("SELECT * FROM \"Employes\" WHERE employee_id=$1", [req.params.id]);
     if (user_exist.rows.length <= 0) {
-        return res.status(400).json("El usuario no existe.");
+        return res.status(400).json({msg: "El usuario no existe."});
     }
 
     try {

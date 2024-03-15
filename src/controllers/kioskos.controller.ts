@@ -97,7 +97,7 @@ export const createKiosko = async (req: Request, res: Response) => {
   try {
     const kiosko_exist = await pool.query("SELECT * FROM \"Kiosko\" WHERE id = $1", [req.params.id]);
     if (kiosko_exist.rows.length >= 1) {
-      return res.status(400).json("El kiosko ya existe cambia el nombre");
+      return res.status(400).json({msg: "El kiosko ya existe cambia el nombre"});
     }
 
     const response = await pool.query(`
