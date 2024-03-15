@@ -25,6 +25,6 @@ router.put("/:product_id", [
 ], ProductController.updateProduct);
 
 
-router.delete("/product_id",[ validateJWT], ProductController.deleteProduct)
+router.delete("/:product_id",[ validateJWT], ProductController.deleteProduct)
 
 export default router;

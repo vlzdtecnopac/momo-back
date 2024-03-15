@@ -52,7 +52,7 @@ try{
 export const deleteProduct = async (req: Request, res: Response) => {
   try{
     let Query = `DELETE FROM "Product"
-    WHERE product_id=$1; RETURNING product_id;`;
+    WHERE product_id=$1 RETURNING product_id;`;
     const response = await pool.query(Query, [req.params.product_id]);
     return res.status(200).json(response.rows[0]);
   } catch (e) {

@@ -9,4 +9,10 @@ router.post('/', [validateJWT,
     check("name_category").notEmpty().withMessage("Ingresa el nombre Categoria")
 ], CategoryController.crearCategory)
 
+router.put('/:category_id', [validateJWT,
+    check("name_category").notEmpty().withMessage("Ingresa el nombre Categoria")
+], CategoryController.updateCategory)
+
+router.delete('/:category_id', [validateJWT], CategoryController.deleteCategory)
+
 export default router;

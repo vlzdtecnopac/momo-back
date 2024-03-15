@@ -6,6 +6,39 @@ import { validationResult } from "express-validator";
 
 const loggsConfig: LoggsConfig = new LoggsConfig();
 
+export const updateCategory = async(req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        let Query = `UPDATE "Category"
+        SET name_category=$2, update_at=now()
+        WHERE category_id=$1 RETURNING category_id;
+    `;
+        const response = await pool.query(Query, [req.params.category_id, req.body.name_category]);
+        return res.status(200).json(response.rows[0]);
+    } catch (e) {
+        loggsConfig.error(`${e}`);
+        return res.status(500).json(e);
+    }
+}
+
+export const deleteCategory = async(req: Request, res: Response) => {
+
+    try {
+        let Query = `DELETE FROM public."Category"
+        WHERE category_id=$1; RETURNING category_id;
+    `;
+        const response = await pool.query(Query, [req.params.category_id]);
+        return res.status(200).json(response.rows[0]);
+    } catch (e) {
+        loggsConfig.error(`${e}`);
+        return res.status(500).json(e);
+    }
+}
+
 export const crearCategory = async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
