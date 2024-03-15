@@ -2,7 +2,6 @@ import express, {Express} from "express";
 import bodyParser from "body-parser";
 import passport from "passport";
 import path from "path";
-import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import swaggerSetup from "./../docs/swagger";
 import cors from "cors";
@@ -18,6 +17,7 @@ export const paths = {
   config: "/config",
   category: "/category",
   file: "/file",
+  payment: "/payment",
   product: "/product",
   kioskos: "/kioskos",
   shooping: "/shopping",
@@ -89,6 +89,7 @@ class Server {
     app.use(paths.users, API_ROUTER.userRouter);
     app.use(paths.config, API_ROUTER.configRouter);
     app.use(paths.category, API_ROUTER.categoryRouter);
+    app.use(paths.payment, API_ROUTER.paymentRouter);
     app.use(paths.product, API_ROUTER.productRouter);
     app.use(paths.kioskos, API_ROUTER.kioskoRouter);
     app.use(paths.shooping, API_ROUTER.shoppingRouter);
