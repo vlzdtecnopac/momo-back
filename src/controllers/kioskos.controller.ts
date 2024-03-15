@@ -136,7 +136,7 @@ export const activeKioskoAuto = async (req: Request, res: Response) => {
     json_build_object('data', k.* ) as kiosko
     FROM "Shopping" s 
   join "Kiosko" k on k.shopping_id = s.shopping_id  
-  WHERE s.shopping_id = $1 and k.state = $2;`, [req.query.shopping_id, req.query.state]);
+  WHERE s.shopping_id = $1 and k.state = $2 ORDER BY k.id ASC;`, [req.query.shopping_id, req.query.state]);
     let kiosko_inactives = response.rows;
     if (kiosko_inactives.length > 0) {
       kiosko_inactives.map(async (item, i: number) => {
@@ -154,7 +154,7 @@ export const activeKioskoAuto = async (req: Request, res: Response) => {
     join "Shopping" s on s.shopping_id = k.shopping_id  WHERE k.shopping_id = $1
     ORDER BY k.id ASC`, [data?.shopping_id]);
         Server.instance.io.emit("kiosko-socket", consult.rows);
-          return res.status(200).json(response.rows[0]);
+          return res.status(200).json(data);
         }
       });
     }else{
