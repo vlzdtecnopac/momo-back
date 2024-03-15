@@ -13,8 +13,14 @@ router.post("/", [
 ], KioskoController.createKiosko);
 
 router.get("/", [validateJWT,
-  query("shopping_id").optional()
+  query("shopping_id").optional(),
+  query("state").optional()
 ], KioskoController.kioskos);
+
+router.get("/activate/", [validateJWT,
+  query("shopping_id").notEmpty().withMessage("Ingresa el ID Shopping."),
+  query("state").isBoolean().withMessage("Error no es boolean.")
+], KioskoController.activeKioskoAuto);
 
 router.delete("/:kiosko_id", [validateJWT, query("shopping_id").notEmpty().withMessage("Ingrese la ID Shopping.")], KioskoController.deleteKiosko);
 
