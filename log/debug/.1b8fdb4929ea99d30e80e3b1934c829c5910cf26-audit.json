@@ -21,9 +21,14 @@
             "hash": "9631f82d041c1b31810b41851eed809e1c6ff1871b8a90c166ab14d66d101402"
         },
         {
-            "date": 1710463805965,
+            "date": 1710307433364,
+            "name": "log/debug/debug-2024-03-13.log",
+            "hash": "ce58e22e580fa527d4fd511f5521ebf391cadc41744cadbe9af33bdaa0544e9f"
+        },
+        {
+            "date": 1710392446499,
             "name": "log/debug/debug-2024-03-14.log",
-            "hash": "0d9e818c044687b9ddf12ff53197b46da26762ad8cb9e44053a7e7be95c65c9f"
+            "hash": "d566c669ffe3fdaa04f3033b1f93938410d3053f05e374fac891a84ff377db53"
         }
     ],
     "hashType": "sha256"

@@ -5,7 +5,6 @@ import { pool } from "../config/db";
 const loggsConfig: LoggsConfig = new LoggsConfig();
 
 const validateJWT = async (req: Request, res: Response, next: NextFunction) => {
-
     const token = req.header("x-token");
     const secretKey: jwt.Secret = process.env.SECRETORPRIVATEKEY || "MOMO123456";
 

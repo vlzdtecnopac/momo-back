@@ -11,13 +11,16 @@ import * as http from "http";
 import * as socketIO from "socket.io";
 import { LoggsConfig } from "./config/logs";
 import socketController from "./sockets/sockets.controller";
+import fileUpload from "express-fileupload";
 
 export const paths = {
   home: "/",
-  users: "/users",
   config: "/config",
-  shooping: "/shopping",
+  file: "/file",
+  product: "/product",
   kioskos: "/kioskos",
+  shooping: "/shopping",
+  users: "/users",
 };
 
 
@@ -57,6 +60,11 @@ class Server {
 
 
   initConfig() {
+    if (process.env.NODE_ENV === "development") {
+      require("dotenv").config({ path: ".env.development" });
+    } else if (process.env.NODE_ENV === "production") {
+      require("dotenv").config({ path: ".env.production" });
+    }
     this.app.set("port", process.env.PORT || 3000);
     this.app.set("views", path.join(__dirname, "../../views"));
     this.app.set("view engine", "pug");
@@ -65,23 +73,24 @@ class Server {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
     this.app.use(cors({ origin: true, credentials: true }));
+    this.app.use(
+      fileUpload({
+        useTempFiles: true,
+        tempFileDir: "./uploads"
+    })
+    );
     this.app.use(passport.initialize());
     this.rutasConfig(this.app);
-
-    if (process.env.NODE_ENV === "development") {
-      dotenv.config({ path: ".env.development" });
-    } else if (process.env.NODE_ENV === "production") {
-      dotenv.config({ path: ".env.production" });
-    }
-
   }
 
   rutasConfig(app: Express){
     app.use(paths.home, API_ROUTER.homeRouter);
     app.use(paths.users, API_ROUTER.userRouter);
     app.use(paths.config, API_ROUTER.configRouter);
+    app.use(paths.product, API_ROUTER.productRouter);
     app.use(paths.kioskos, API_ROUTER.kioskoRouter);
     app.use(paths.shooping, API_ROUTER.shoppingRouter);
+    app.use(paths.file, API_ROUTER.fileRouter);
   }
 
   socketConfig() {
