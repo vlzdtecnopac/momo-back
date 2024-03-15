@@ -1,5 +1,5 @@
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { S3Client, PutObjectCommand, GetObjectCommand, ListObjectsCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand, ListObjectsCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import fs from "fs";
 
 if (process.env.NODE_ENV === "development") {
@@ -43,17 +43,33 @@ export async function uploadFileArchive(file: any) {
         console.log("Archivo cargado exitosamente en S3:", data);
     } catch (err) {
         console.error("Error al subir el archivo a S3:", err);
-        throw err; // Lanza el error para manejarlo en la función de llamada
+        throw err; 
     }
 }
 
 
-export async function getFileGenerateURL(filename: any) {
+export async function getFileGenerateURL(fileName: string) {
     const command = new GetObjectCommand({
         Bucket: process.env.AWS_BUCKET_NAME,
-        Key: filename
+        Key: fileName
     })
     return await getSignedUrl(s3Client, command, { expiresIn: 28800 })
 }
 
+
+export async function deleteFileUrl(fileName: any){
+    try {
+        const params = {
+          Bucket: process.env.AWS_BUCKET_NAME,
+          Key: fileName,
+        };
+    
+        const command = new DeleteObjectCommand(params);
+        await s3Client.send(command);
+        
+       return `Imagen ${fileName} eliminada exitosamente.`;
+      } catch (error) {
+        return 'Error al eliminar la imagen:' +  error;
+      }
+}
 
