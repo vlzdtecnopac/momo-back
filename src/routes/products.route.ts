@@ -15,4 +15,16 @@ router.post("/", [
 ], ProductController.createProduct);
 
 
+router.put("/:product_id", [
+    validateJWT, 
+    check("category_id").notEmpty().withMessage("Ingresa la CETEGORIA ID, la que pertenece."),
+    check("name_product").notEmpty().withMessage("Ingresa el nombre del producto."),
+    check("description").notEmpty().withMessage("Ingresa la descripción del prodcuto."),
+    check("state").isBoolean().withMessage("Ingresa el estado del producto."),
+    check("image").optional()
+], ProductController.updateProduct);
+
+
+router.delete("/product_id",[ validateJWT], ProductController.deleteProduct)
+
 export default router;

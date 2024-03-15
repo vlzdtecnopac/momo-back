@@ -8,24 +8,55 @@ const loggsConfig: LoggsConfig = new LoggsConfig();
 
 
 export const createProduct = async (req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
-    try{
-    const { category_id, name_product, description, state} =  req.body;
-    
+  try {
+    const { category_id, name_product, description, state } = req.body;
+
     let Query = `INSERT INTO public."Product"
     (product_id, category_id, name_product, image, description, state, create_at)
     VALUES($1, $2, $3, $4, $5, $6, now()) RETURNING product_id;
     `;
 
-    const response = await pool.query(Query, [uuidv4(), category_id, name_product, ,description, state]);
+    const response = await pool.query(Query, [uuidv4(), category_id, name_product, , description, state]);
 
     return res.status(200).json(response.rows[0]);
-    }catch(e){
-      loggsConfig.error(`${e}`);
-      return res.status(500).json(e);
-    }
+  } catch (e) {
+    loggsConfig.error(`${e}`);
+    return res.status(500).json(e);
+  }
 };
+
+
+export const updateProduct = async (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+try{
+  const { category_id, name_product, image, description, state } = req.body;
+  let Query = `UPDATE "Product"
+  SET category_id=$1, name_product=$2, image=$3, description=$4, state=$5, update_at=now() WHERE product_id=$6 RETURNING product_id;`;
+  const response = await pool.query(Query, [category_id, name_product, image, description, state, req.params.product_id]);
+  return res.status(200).json(response.rows[0]);
+} catch (e) {
+  loggsConfig.error(`${e}`);
+  return res.status(500).json(e);
+}
+
+}
+
+export const deleteProduct = async (req: Request, res: Response) => {
+  try{
+    let Query = `DELETE FROM "Product"
+    WHERE product_id=$1; RETURNING product_id;`;
+    const response = await pool.query(Query, [req.params.product_id]);
+    return res.status(200).json(response.rows[0]);
+  } catch (e) {
+    loggsConfig.error(`${e}`);
+    return res.status(500).json(e);
+  }
+}
