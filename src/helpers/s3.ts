@@ -53,5 +53,7 @@ export async function getFileGenerateURL(filename: any) {
         Bucket: process.env.AWS_BUCKET_NAME,
         Key: filename
     })
-    return await getSignedUrl(s3Client, command, { expiresIn: 3600 })
+    return await getSignedUrl(s3Client, command, { expiresIn: 28800 })
 }
+
+

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getFileGenerateURL, getFilesURL, uploadFileArchive } from "../helpers/s3";
+import { downloadFile, getFileGenerateURL, getFilesURL, uploadFileArchive } from "../helpers/s3";
 
 export const uploadFile = async (req: Request, res: Response) => {
     try {
@@ -26,6 +26,7 @@ export const getFiles =  async (req: Request, res: Response) => {
     const result =  await getFilesURL();
     return res.status(200).json(result.Contents);
 }
+
 
 
 
