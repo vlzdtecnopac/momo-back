@@ -5,6 +5,7 @@ import validateJWT from "../middlewares/validate_jwt.middleware";
 
 
 const router: Router = Router();
+router.get('/', [validateJWT], ProductController.getProductAll)
 
 router.post("/", [
     validateJWT, 

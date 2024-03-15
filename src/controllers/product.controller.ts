@@ -6,6 +6,18 @@ import { validationResult } from "express-validator";
 
 const loggsConfig: LoggsConfig = new LoggsConfig();
 
+export const getProductAll = async ( req: Request, res: Response) => {
+  try {
+    let Query = `SELECT id, product_id, category_id, name_product, image, description, state, create_at, update_at
+    FROM "Product";
+`;
+    const response = await pool.query(Query);
+    return res.status(200).json(response.rows);
+} catch (e) {
+    loggsConfig.error(`${e}`);
+    return res.status(500).json(e);
+}
+}
 
 export const createProduct = async (req: Request, res: Response) => {
   const errors = validationResult(req);
