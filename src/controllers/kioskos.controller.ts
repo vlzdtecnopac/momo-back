@@ -140,7 +140,7 @@ export const activeKioskoAuto = async (req: Request, res: Response) => {
     let kiosko_inactives = response.rows;
     if (kiosko_inactives.length > 0) {
       kiosko_inactives.map(async (item, i: number) => {
-        const { kiosko: { data } } = item;
+        const {name_shopping , kiosko: { data } } = item;
         if (!data?.state && i == 0) {
           console.log(data.kiosko_id);
           let SQL = `UPDATE public."Kiosko"
@@ -154,7 +154,7 @@ export const activeKioskoAuto = async (req: Request, res: Response) => {
     join "Shopping" s on s.shopping_id = k.shopping_id  WHERE k.shopping_id = $1
     ORDER BY k.id ASC`, [data?.shopping_id]);
         Server.instance.io.emit("kiosko-socket", consult.rows);
-          return res.status(200).json(data);
+          return res.status(200).json({name_shopping, data});
         }
       });
     }else{
