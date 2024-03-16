@@ -1,12 +1,14 @@
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { S3Client, PutObjectCommand, GetObjectCommand, ListObjectsCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import fs from "fs";
+import { LoggsConfig } from '../config/logs';
 
 if (process.env.NODE_ENV === "development") {
     require("dotenv").config({ path: ".env.development" });
 } else if (process.env.NODE_ENV === "production") {
     require("dotenv").config({ path: ".env.production" });
 }
+const loggsConfig: LoggsConfig = new LoggsConfig();
 
 const accessKeyId: any = process.env.AWS_PUBLIC_KEY;
 const secretAccessKey: any = process.env.AWS_SECRET_KEY;
@@ -40,9 +42,9 @@ export async function uploadFileArchive(file: any) {
 
     try {
         const data: any = await s3Client.send(new PutObjectCommand(params));
-        console.log("Archivo cargado exitosamente en S3:", data);
+        loggsConfig.log(`Archivo cargado exitosamente en S3: ${data}`);
     } catch (err) {
-        console.error("Error al subir el archivo a S3:", err);
+        loggsConfig.log(`Error al subir el archivo a S3:" ${err}`);
         throw err; 
     }
 }

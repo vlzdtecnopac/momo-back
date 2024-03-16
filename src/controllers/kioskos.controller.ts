@@ -142,7 +142,6 @@ export const activeKioskoAuto = async (req: Request, res: Response) => {
       kiosko_inactives.map(async (item, i: number) => {
         const {name_shopping , kiosko: { data } } = item;
         if (!data?.state && i == 0) {
-          console.log(data.kiosko_id);
           let SQL = `UPDATE public."Kiosko"
         SET kiosko_id=$1, shopping_id=$2, state=$3, nombre=$4, update_at=now()
         WHERE kiosko_id=$1 RETURNING kiosko_id;
