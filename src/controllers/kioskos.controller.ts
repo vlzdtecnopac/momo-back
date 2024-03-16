@@ -84,11 +84,12 @@ export const deleteKiosko = async (req: Request, res: Response) => {
       return res.status(400).json("El kiosko que desea eliminar no existe.");
     }
 
-    const response = await pool.query("DELETE FROM \"Kiosko\" WHERE kiosko_id = $1", [req.params.kiosko_id]);
+    const response = await pool.query("DELETE FROM \"Kiosko\" WHERE kiosko_id = $1  RETURNING kiosko_id, shopping_id;", [req.params.kiosko_id]);
     const consult = await pool.query(`SELECT k.*, s.name_shopping FROM "Kiosko" k
     join "Shopping" s on s.shopping_id = k.shopping_id  WHERE k.shopping_id = $1 
     ORDER BY k.id ASC`, [req.query.shopping_id]);
     Server.instance.io.emit("kiosko-socket", consult.rows);
+    Server.instance.io.emit("kiosko-verify-socket", response.rows[0]);
     return res.status(200).json(response.rows);
   } catch (e) {
     loggsConfig.error(`${e}`);

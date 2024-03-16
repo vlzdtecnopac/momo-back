@@ -10,13 +10,13 @@ const socketController = (socket: Socket) => {
     logs.debug(`User ID Socket: ${socket.id}`);
     logs.debug("User connected 🎉");
     // Handle custom events or messages from the client
-    socket.on("kiosko-socket", async (msg) => {
+    socket.on("kiosko-socket", async (payload) => {
       const response = await pool.query(`SELECT k.*, s.name_shopping FROM "Kiosko" k
       join "Shopping" s on s.shopping_id = k.shopping_id WHERE k.shopping_id = $1
-      ORDER BY k.id ASC`, [msg.shopping_id]);
-      // Broadcast the message to all connected clients
+      ORDER BY k.id ASC`, [payload.shopping_id]);
       socket.emit("kiosko-socket", response.rows);
     });
+
 
     // Handle disconnection event
     socket.on("disconnect", () => {
