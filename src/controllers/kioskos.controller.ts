@@ -1,5 +1,4 @@
 import { Request, Response, query } from "express";
-import { exec } from 'child_process';
 import { v4 as uuidv4 } from "uuid";
 import { pool } from "../config/db";
 import { LoggsConfig } from "../config/logs";
@@ -57,13 +56,16 @@ export const updateKiosko = async (req: Request, res: Response) => {
     }
     const response = await pool.query(`UPDATE "Kiosko"
     SET  state=$1, shopping_id=$2, update_at=now()
-    WHERE kiosko_id=$3`, [state, shopping_id, req.params.kiosko_id]);
+    WHERE kiosko_id=$3  RETURNING kiosko_id, shopping_id;`, [state, shopping_id, req.params.kiosko_id]);
 
     const consult = await
       pool.query(`SELECT k.*, s.name_shopping FROM "Kiosko" k
       join "Shopping" s on s.shopping_id=k.shopping_id  WHERE k.shopping_id=$1
       ORDER BY k.id ASC`, [shopping_id]);
     Server.instance.io.emit("kiosko-socket", consult.rows);
+    if (state == "false") {
+      Server.instance.io.emit("kiosko-verify-socket", response.rows[0]);
+    }
     return res.status(200).json(response.rows);
   } catch (e) {
     loggsConfig.error(`${e}`);
@@ -146,23 +148,23 @@ export const activeKioskoAuto = async (req: Request, res: Response) => {
     let kiosko_inactives = response.rows;
     if (kiosko_inactives.length > 0) {
       kiosko_inactives.map(async (item, i: number) => {
-        const {name_shopping , kiosko: { data } } = item;
+        const { name_shopping, kiosko: { data } } = item;
         if (!data?.state && i == 0) {
           let SQL = `UPDATE public."Kiosko"
         SET kiosko_id=$1, shopping_id=$2, state=$3, nombre=$4, update_at=now()
         WHERE kiosko_id=$1 RETURNING kiosko_id;
         `
           const response = await pool.query(SQL, [data?.kiosko_id, data?.shopping_id, true, data?.nombre]);
-          
+
           const consult = await
-          pool.query(`SELECT k.*, s.name_shopping FROM "Kiosko" k
+            pool.query(`SELECT k.*, s.name_shopping FROM "Kiosko" k
     join "Shopping" s on s.shopping_id = k.shopping_id  WHERE k.shopping_id = $1
     ORDER BY k.id ASC`, [data?.shopping_id]);
-        Server.instance.io.emit("kiosko-socket", consult.rows);
-          return res.status(200).json({name_shopping, data});
+          Server.instance.io.emit("kiosko-socket", consult.rows);
+          return res.status(200).json({ name_shopping, data });
         }
       });
-    }else{
+    } else {
       return res.status(400).json({ msg: "No hay kioskos dispobles por activar." });
     }
   } catch (e) {
