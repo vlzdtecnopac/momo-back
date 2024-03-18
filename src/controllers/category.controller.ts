@@ -8,8 +8,7 @@ const loggsConfig: LoggsConfig = new LoggsConfig();
 
 export const getCategoryAll = async (req: Request, res: Response) => {
     try {
-        let Query = `SELECT id, category_id, name_category, create_at, update_at
-        FROM "Category";
+        let Query = `SELECT id, category_id, name_category, image, class, sub_category, create_at, update_at FROM "Category" ORDER BY id ASC;
     `;
         const response = await pool.query(Query);
         return res.status(200).json(response.rows);

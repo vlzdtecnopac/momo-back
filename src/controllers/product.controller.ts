@@ -8,7 +8,7 @@ const loggsConfig: LoggsConfig = new LoggsConfig();
 
 export const getProductAll = async ( req: Request, res: Response) => {
   try {
-    let Query = `SELECT id, product_id, category_id, name_product, image, description, state, create_at, update_at
+    let Query = `SELECT id, product_id, category_id, name_product, description, state, create_at, update_at, image
     FROM "Product";
 `;
     const response = await pool.query(Query);
