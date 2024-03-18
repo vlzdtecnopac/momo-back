@@ -5,7 +5,7 @@ import validateJWT from "../middlewares/validate_jwt.middleware";
 
 
 const router: Router = Router();
-router.get('/', [validateJWT], ProductController.getProductAll)
+router.get("/", [validateJWT], ProductController.getProductAll);
 
 router.post("/", [
     validateJWT, 
@@ -26,6 +26,6 @@ router.put("/:product_id", [
 ], ProductController.updateProduct);
 
 
-router.delete("/:product_id",[ validateJWT], ProductController.deleteProduct)
+router.delete("/:product_id",[ validateJWT], ProductController.deleteProduct);
 
 export default router;

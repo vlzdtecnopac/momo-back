@@ -20,18 +20,18 @@ export const getFile = async(req: Request, res: Response) => {
     return res.status(200).json({
         url: result
     });
-}
+};
 
 export const getFiles =  async (req: Request, res: Response) => {
     const result =  await getFilesURL();
     return res.status(200).json(result.Contents);
-}
+};
 
 
 export const deleteFile = async(req: Request, res: Response) => {
     const result =  await deleteFileUrl(req.params.fileName);
     return res.status(200).json(result);
-}
+};
 
 
 

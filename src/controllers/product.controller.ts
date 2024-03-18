@@ -8,7 +8,7 @@ const loggsConfig: LoggsConfig = new LoggsConfig();
 
 export const getProductAll = async ( req: Request, res: Response) => {
   try {
-    let Query = `SELECT id, product_id, category_id, name_product, description, state, create_at, update_at, image
+    const Query = `SELECT id, product_id, category_id, name_product, description, state, create_at, update_at, image
     FROM "Product";
 `;
     const response = await pool.query(Query);
@@ -17,7 +17,7 @@ export const getProductAll = async ( req: Request, res: Response) => {
     loggsConfig.error(`${e}`);
     return res.status(500).json(e);
 }
-}
+};
 
 export const createProduct = async (req: Request, res: Response) => {
   const errors = validationResult(req);
@@ -28,7 +28,7 @@ export const createProduct = async (req: Request, res: Response) => {
   try {
     const { category_id, name_product, description, state } = req.body;
 
-    let Query = `INSERT INTO public."Product"
+    const Query = `INSERT INTO public."Product"
     (product_id, category_id, name_product, image, description, state, create_at)
     VALUES($1, $2, $3, $4, $5, $6, now()) RETURNING product_id;
     `;
@@ -50,7 +50,7 @@ export const updateProduct = async (req: Request, res: Response) => {
   }
   try {
     const { category_id, name_product, image, description, state } = req.body;
-    let Query = `UPDATE "Product"
+    const Query = `UPDATE "Product"
   SET category_id=$1, name_product=$2, image=$3, description=$4, state=$5, update_at=now() WHERE product_id=$6 RETURNING product_id;`;
     const response = await pool.query(Query, [category_id, name_product, image, description, state, req.params.product_id]);
     return res.status(200).json(response.rows[0]);
@@ -59,10 +59,10 @@ export const updateProduct = async (req: Request, res: Response) => {
     return res.status(500).json(e);
   }
 
-}
+};
 
 export const deleteProduct = async (req: Request, res: Response) => {
-  let product_id = req.params.product_id;
+  const product_id = req.params.product_id;
 
   const product_exist = await pool.query(`SELECT product_id FROM "Product" WHERE  product_id = $1
 `, [product_id]);
@@ -72,7 +72,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
   }
 
   try {
-    let Query = `DELETE FROM "Product"
+    const Query = `DELETE FROM "Product"
     WHERE product_id=$1 RETURNING product_id;`;
     const response = await pool.query(Query, [product_id]);
     return res.status(200).json(response.rows[0]);
@@ -80,4 +80,4 @@ export const deleteProduct = async (req: Request, res: Response) => {
     loggsConfig.error(`${e}`);
     return res.status(500).json(e);
   }
-}
+};

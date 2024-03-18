@@ -8,7 +8,7 @@ const loggsConfig: LoggsConfig = new LoggsConfig();
 
 export const getCategoryAll = async (req: Request, res: Response) => {
     try {
-        let Query = `SELECT id, category_id, name_category, image, class, sub_category, create_at, update_at FROM "Category" ORDER BY id ASC;
+        const Query = `SELECT id, category_id, name_category, image, class, sub_category, create_at, update_at FROM "Category" ORDER BY id ASC;
     `;
         const response = await pool.query(Query);
         return res.status(200).json(response.rows);
@@ -16,7 +16,7 @@ export const getCategoryAll = async (req: Request, res: Response) => {
         loggsConfig.error(`${e}`);
         return res.status(500).json(e);
     }
-}
+};
 
 export const updateCategory = async (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -25,7 +25,7 @@ export const updateCategory = async (req: Request, res: Response) => {
     }
 
     try {
-        let Query = `UPDATE "Category"
+        const Query = `UPDATE "Category"
         SET name_category=$2, update_at=now()
         WHERE category_id=$1 RETURNING category_id;
     `;
@@ -35,12 +35,12 @@ export const updateCategory = async (req: Request, res: Response) => {
         loggsConfig.error(`${e}`);
         return res.status(500).json(e);
     }
-}
+};
 
 export const deleteCategory = async (req: Request, res: Response) => {
     try {
 
-        let category_id = req.params.category_id;
+        const category_id = req.params.category_id;
 
         const category_exist = await pool.query(`SELECT category_id
         FROM "Category" WHERE category_id =  $1;
@@ -51,7 +51,7 @@ export const deleteCategory = async (req: Request, res: Response) => {
         }
 
 
-        let Query = `DELETE FROM public."Category"
+        const Query = `DELETE FROM public."Category"
         WHERE category_id=$1 RETURNING category_id;
     `;
         const response = await pool.query(Query, [category_id]);
@@ -60,7 +60,7 @@ export const deleteCategory = async (req: Request, res: Response) => {
         loggsConfig.error(`${e}`);
         return res.status(500).json(e);
     }
-}
+};
 
 export const crearCategory = async (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -68,7 +68,7 @@ export const crearCategory = async (req: Request, res: Response) => {
         return res.status(400).json({ errors: errors.array() });
     }
     try {
-        let Query = `INSERT INTO "Category"
+        const Query = `INSERT INTO "Category"
     (category_id, name_category, create_at)
     VALUES($1, $2, now()) RETURNING category_id;
     `;
@@ -79,4 +79,4 @@ export const crearCategory = async (req: Request, res: Response) => {
         loggsConfig.error(`${e}`);
         return res.status(500).json(e);
     }
-}
+};

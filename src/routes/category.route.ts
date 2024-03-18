@@ -5,16 +5,16 @@ import validateJWT from "../middlewares/validate_jwt.middleware";
 
 const router = express.Router();
 
-router.get('/', [validateJWT], CategoryController.getCategoryAll)
+router.get("/", [validateJWT], CategoryController.getCategoryAll);
 
-router.post('/', [validateJWT,
+router.post("/", [validateJWT,
     check("name_category").notEmpty().withMessage("Ingresa el nombre Categoria")
-], CategoryController.crearCategory)
+], CategoryController.crearCategory);
 
-router.put('/:category_id', [validateJWT,
+router.put("/:category_id", [validateJWT,
     check("name_category").notEmpty().withMessage("Ingresa el nombre Categoria")
-], CategoryController.updateCategory)
+], CategoryController.updateCategory);
 
-router.delete('/:category_id', [validateJWT], CategoryController.deleteCategory)
+router.delete("/:category_id", [validateJWT], CategoryController.deleteCategory);
 
 export default router;

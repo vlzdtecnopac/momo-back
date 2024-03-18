@@ -145,15 +145,15 @@ export const activeKioskoAuto = async (req: Request, res: Response) => {
     FROM "Shopping" s 
   join "Kiosko" k on k.shopping_id = s.shopping_id  
   WHERE s.shopping_id = $1 and k.state = $2 ORDER BY k.id ASC;`, [req.query.shopping_id, req.query.state]);
-    let kiosko_inactives = response.rows;
+    const kiosko_inactives = response.rows;
     if (kiosko_inactives.length > 0) {
       kiosko_inactives.map(async (item, i: number) => {
         const { name_shopping, kiosko: { data } } = item;
         if (!data?.state && i == 0) {
-          let SQL = `UPDATE public."Kiosko"
+          const SQL = `UPDATE public."Kiosko"
         SET kiosko_id=$1, shopping_id=$2, state=$3, nombre=$4, update_at=now()
         WHERE kiosko_id=$1 RETURNING kiosko_id;
-        `
+        `;
           const response = await pool.query(SQL, [data?.kiosko_id, data?.shopping_id, true, data?.nombre]);
 
           const consult = await
@@ -173,5 +173,5 @@ export const activeKioskoAuto = async (req: Request, res: Response) => {
   }
 
 
-}
+};
 
