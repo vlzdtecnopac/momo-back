@@ -35,5 +35,13 @@ router.post("/employee/login", [
     check("password").notEmpty().withMessage("Ingresa la contraseña."),
 ], UserController.startSessionEmployee);
 
+router.post("/client/register",[
+    check("first_name").isEmail().withMessage("Ingresa el nombre completo."),
+    check("last_name").notEmpty().withMessage("Ingresa el apellido completo."),
+    check("phone").notEmpty().withMessage("Ingresa el número telefónico."),
+    check("code").notEmpty().withMessage("Ingresa el prefijo telefónico."),
+    check("email").isEmail().withMessage("Ingresa correctamente el email").notEmpty().withMessage("Ingresa el correo electrónico."),
+], UserController.userRegisterClient)
+
 
 export default router;

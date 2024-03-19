@@ -151,3 +151,7 @@ export const userDeleteEmployee = async (req: Request, res: Response) => {
 
 };
 
+export const userRegisterClient =  async (req: Request, res: Response) => {
+    return res.status(400).json({msg: "working Create."});
+}
+
