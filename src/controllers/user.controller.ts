@@ -181,7 +181,7 @@ export const updateToken = (req: Request, res: Response,) => {
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-    
+
     try {
 
         const secretKey: jwt.Secret = process.env.SECRETORPRIVATEKEY || "MOMO123456";
@@ -195,7 +195,7 @@ export const updateToken = (req: Request, res: Response,) => {
         const decodedToken = jwt.verify(token, secretKey) as JwtPayload;
         const uid = decodedToken.uid;
         const newToken = jwt.sign({ uid }, secretKey, {  expiresIn  });
-        res.status(200).json({toke: newToken});
+        res.status(200).json({token: newToken});
     } catch (e) {
         loggsConfig.error(`${e}`);
         return res.status(500).json(e);
