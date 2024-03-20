@@ -33,11 +33,11 @@ export const startSessionEmployee = async (req: Request, res: Response) => {
             if (err) {
                 loggsConfig.error(`Error comparing passwords: $${err}`);
             } else if (match) {
-                const respJson =  {
+                const respJson = {
                     employee_id: response.rows[0].employee_id,
                     shopping_id: response.rows[0].shopping_id,
                     state: response.rows[0].state,
-                    token: generateAuthToken(response.rows[0].employee_id) 
+                    token: generateAuthToken(response.rows[0].employee_id)
                 };
                 return res.status(200).json(respJson);
             } else {
@@ -57,16 +57,16 @@ export const userAllEmployeee = async (req: Request, res: Response) => {
         FROM "Employes"
         `;
 
-        const {shopping_id, employee_id} = req.query;
+        const { shopping_id, employee_id } = req.query;
 
-        if(shopping_id != undefined || employee_id != undefined){
+        if (shopping_id != undefined || employee_id != undefined) {
             const arrayWehere = [];
-            shopping_id == "" ? "" : arrayWehere.push({"shopping_id": shopping_id});
-            employee_id == "" ? "" : arrayWehere.push({"employee_id": employee_id});
-       
+            shopping_id == "" ? "" : arrayWehere.push({ "shopping_id": shopping_id });
+            employee_id == "" ? "" : arrayWehere.push({ "employee_id": employee_id });
+
             const result_consult = arrayWehere.map(item => ` ${Object.keys(item)} = '${Object.values(item)}'`).join("OR");
             Query += ` WHERE ${result_consult}`;
-          }
+        }
         const response = await pool.query(Query);
         return res.status(200).json(response.rows);
     } catch (e) {
@@ -106,7 +106,7 @@ export const userRegisterEmployee = async (req: Request, res: Response) => {
 export const userUpdateEmployee = async (req: Request, res: Response) => {
     const user_exist = await pool.query("SELECT * FROM \"Employes\" WHERE employee_id=$1", [req.params.id]);
     if (user_exist.rows.length <= 0) {
-        return res.status(400).json({msg: "El usuario no existe."});
+        return res.status(400).json({ msg: "El usuario no existe." });
     }
 
     const errors = validationResult(req);
@@ -114,7 +114,7 @@ export const userUpdateEmployee = async (req: Request, res: Response) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { shopping_id,  first_name, last_name, phone, email, state, password } = req.body;
+    const { shopping_id, first_name, last_name, phone, email, state, password } = req.body;
     const salt = await bcrypt.genSalt(saltRounds);
     const hash = await bcrypt.hash(password, salt);
     try {
@@ -135,7 +135,7 @@ export const userDeleteEmployee = async (req: Request, res: Response) => {
 
     const user_exist = await pool.query("SELECT * FROM \"Employes\" WHERE employee_id=$1", [req.params.id]);
     if (user_exist.rows.length <= 0) {
-        return res.status(400).json({msg: "El usuario no existe."});
+        return res.status(400).json({ msg: "El usuario no existe." });
     }
 
     try {
@@ -151,11 +151,27 @@ export const userDeleteEmployee = async (req: Request, res: Response) => {
 
 };
 
-export const userRegisterClient =  async (req: Request, res: Response) => {
+export const userRegisterClient = async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-    return res.status(400).json({msg: "working Create."});
+    const { first_name, last_name, phone, code, country, email } = req.body
+
+    try {
+        const response = await pool.query(`
+        INSERT INTO "Client"
+        (client_id, first_name, last_name, phone, email, country, code_country, state, create_at )
+        VALUES($1, $2, $3, $4, $5, $6, $7, $8,now()) RETURNING client_id, first_name, last_name, phone, phone, email;
+        `, [uuidv4(), first_name, last_name, phone, email, country, code, true]);
+
+        console.log(response);
+        return res.status(200).json(response.rows[0]);
+
+    } catch (e) {
+        loggsConfig.error(`${e}`);
+        return res.status(500).json(e);
+    }
+
 }
 
