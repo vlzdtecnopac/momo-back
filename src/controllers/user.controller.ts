@@ -1,4 +1,5 @@
 import { Request, Response, query } from "express";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import { LoggsConfig } from "../config/logs";
@@ -168,6 +169,33 @@ export const userRegisterClient = async (req: Request, res: Response) => {
         console.log(response);
         return res.status(200).json(response.rows[0]);
 
+    } catch (e) {
+        loggsConfig.error(`${e}`);
+        return res.status(500).json(e);
+    }
+
+}
+
+export const updateToken = (req: Request, res: Response,) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    
+    try {
+
+        const secretKey: jwt.Secret = process.env.SECRETORPRIVATEKEY || "MOMO123456";
+        const expiresIn = "1h";
+        const payload = {
+            uid: req.body.id
+        };
+      
+        const token = jwt.sign(payload, secretKey, { expiresIn });
+    
+        const decodedToken = jwt.verify(token, secretKey) as JwtPayload;
+        const uid = decodedToken.uid;
+        const newToken = jwt.sign({ uid }, secretKey, {  expiresIn  });
+        res.status(200).json({toke: newToken});
     } catch (e) {
         loggsConfig.error(`${e}`);
         return res.status(500).json(e);

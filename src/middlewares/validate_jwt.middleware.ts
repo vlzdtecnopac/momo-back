@@ -6,6 +6,7 @@ const loggsConfig: LoggsConfig = new LoggsConfig();
 
 const validateJWT = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.header("x-token");
+  
     const secretKey: jwt.Secret = process.env.SECRETORPRIVATEKEY || "MOMO123456";
 
     if (!token) {
@@ -16,9 +17,8 @@ const validateJWT = async (req: Request, res: Response, next: NextFunction) => {
 
 
     try {
-        const decodedToken = jwt.verify(token, secretKey) as JwtPayload;
-        const uid = decodedToken.uid;
-      
+        const { uid } = jwt.verify( token, secretKey ) as  JwtPayload;
+
         // Verificar Usuario
         const employee = await pool.query("SELECT first_name, last_name, phone, email, state FROM \"Employes\" WHERE employee_id = $1 ;", [uid]);
       
@@ -35,13 +35,7 @@ const validateJWT = async (req: Request, res: Response, next: NextFunction) => {
             });
         }
 
-        const now = Math.floor(Date.now() / 1000);
-
-        if (decodedToken.exp && decodedToken.exp < now) {
-            const newToken = jwt.sign({ uid }, secretKey, { expiresIn: "1h" }); // Renovar el token por 1 hora
-            res.setHeader("x-token", newToken); // Agregar el nuevo token en el encabezado de la respuesta
-        }
-
+    
         req.user = employee;
         next();
 

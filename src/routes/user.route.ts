@@ -44,5 +44,7 @@ router.post("/client/register",[
     check("email").isEmail().withMessage("Ingresa correctamente el email").notEmpty().withMessage("Ingresa el correo electrónico."),
 ], UserController.userRegisterClient)
 
+router.post("/update_token", [  check("id").notEmpty().withMessage("Ingresa el ID usuario.")], UserController.updateToken);
+
 
 export default router;
