@@ -35,6 +35,9 @@ router.post("/employee/login", [
     check("password").notEmpty().withMessage("Ingresa la contraseña."),
 ], UserController.startSessionEmployee);
 
+router.post("/client/login", [], UserController.startSessionClient);
+
+
 router.post("/client/register",[
     check("first_name").notEmpty().withMessage("Ingresa el nombre completo."),
     check("last_name").notEmpty().withMessage("Ingresa el apellido completo."),

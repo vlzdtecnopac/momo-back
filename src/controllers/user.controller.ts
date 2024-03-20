@@ -10,6 +10,19 @@ import { generateAuthToken } from "../helpers/generate_jwt.helpers";
 const loggsConfig: LoggsConfig = new LoggsConfig();
 const saltRounds = 10;
 
+export const startSessionClient = async (req: Request, res: Response) => {
+    const { email, phone } = req.body;
+    const response = await pool.query(`SELECT client_id, avatar, first_name, last_name FROM "Client"
+WHERE email=$1  OR phone=$2 LIMIT 1;
+`, [email, phone]);
+
+    if (response.rows[0] == undefined || response.rows[0] == null) {
+        return res.status(401).json({ msg: "No existe usuario." });
+    }
+
+    return res.status(200).json(response.rows);
+}
+
 export const startSessionEmployee = async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -17,7 +30,6 @@ export const startSessionEmployee = async (req: Request, res: Response) => {
     }
     try {
         const { email, password } = req.body;
-
         const response = await pool.query(`SELECT employee_id, shopping_id, "password", state FROM "Employes"
     WHERE email=$1
     `, [email]);
@@ -176,26 +188,30 @@ export const userRegisterClient = async (req: Request, res: Response) => {
 
 }
 
-export const updateToken = (req: Request, res: Response,) => {
+export const updateToken = async (req: Request, res: Response,) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    try {
+    const user_exist = await pool.query("SELECT * FROM \"Employes\" WHERE employee_id=$1", [req.body.id]);
+    if (user_exist.rows.length <= 0) {
+        return res.status(400).json({ msg: "El usuario no existe." });
+    }
 
+    try {
         const secretKey: jwt.Secret = process.env.SECRETORPRIVATEKEY || "MOMO123456";
         const expiresIn = "1h";
         const payload = {
             uid: req.body.id
         };
-      
+
         const token = jwt.sign(payload, secretKey, { expiresIn });
-    
+
         const decodedToken = jwt.verify(token, secretKey) as JwtPayload;
         const uid = decodedToken.uid;
-        const newToken = jwt.sign({ uid }, secretKey, {  expiresIn  });
-        res.status(200).json({token: newToken});
+        const newToken = jwt.sign({ uid }, secretKey, { expiresIn });
+        res.status(200).json({ token: newToken });
     } catch (e) {
         loggsConfig.error(`${e}`);
         return res.status(500).json(e);
