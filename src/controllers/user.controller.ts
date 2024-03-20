@@ -11,11 +11,20 @@ const loggsConfig: LoggsConfig = new LoggsConfig();
 const saltRounds = 10;
 
 export const startSessionClient = async (req: Request, res: Response) => {
-    const { email, phone } = req.body;
-    const response = await pool.query(`SELECT client_id, avatar, first_name, last_name FROM "Client"
-WHERE email=$1  OR phone=$2 LIMIT 1;
-`, [email, phone]);
-
+    const { email, phone, code } = req.body;
+    let response;
+    if(req.body.hasOwnProperty("email")){
+        if(email == null) res.status(401).json({msg: "Ingresa el correo electrónico", attribute: 'email'});
+        response = await pool.query(`SELECT client_id, avatar, first_name, last_name FROM "Client"
+        WHERE email=$1 LIMIT 1;
+        `, [email]);
+    }else{
+        if(phone == null || code == null) res.status(401).json({msg: "Ingresa el número telefónico y el codigo del pais", attribute: ['code', 'phone']});
+        response = await pool.query(`SELECT client_id, avatar, first_name, last_name FROM "Client"
+        WHERE phone=$1 AND code=$2 LIMIT 1;
+        `, [phone, code]);
+    }
+  
     if (response.rows[0] == undefined || response.rows[0] == null) {
         return res.status(401).json({ msg: "No existe usuario." });
     }
