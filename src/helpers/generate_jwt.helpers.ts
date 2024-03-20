@@ -2,7 +2,7 @@ import * as jwt from "jsonwebtoken";
 
 export const generateAuthToken = (Id: string) => {
     const secretKey: jwt.Secret = process.env.SECRETORPRIVATEKEY || "MOMO123456";
-    const expiresIn = "14h";
+    const expiresIn = "1h";
   
     const payload = {
         uid: Id
