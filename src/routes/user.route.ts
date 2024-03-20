@@ -16,7 +16,7 @@ router.post("/employee", [
 
 router.delete("/employee/:id", [validateJWT], UserController.userDeleteEmployee);
 
-router.get("/employee", [validateJWT], UserController.userAllEmployeee);
+router.get("/employee", [validateJWT], UserController.userAllEmployee);
 
 router.put("/employee/:employee_id", [
     validateJWT,
@@ -35,7 +35,7 @@ router.post("/employee/login", [
     check("password").notEmpty().withMessage("Ingresa la contraseña."),
 ], UserController.startSessionEmployee);
 
-router.post("/client/login", [], UserController.startSessionClient);
+router.post("/client/login", [validateJWT], UserController.startSessionClient);
 
 
 router.post("/client/register",[

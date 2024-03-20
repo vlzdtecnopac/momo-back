@@ -16,12 +16,12 @@ export const startSessionClient = async (req: Request, res: Response) => {
     if(req.body.hasOwnProperty("email")){
         if(email == null) res.status(401).json({msg: "Ingresa el correo electrónico", attribute: 'email'});
         response = await pool.query(`SELECT client_id, avatar, first_name, last_name FROM "Client"
-        WHERE email=$1 LIMIT 1;
+        WHERE email=$1;
         `, [email]);
     }else{
         if(phone == null || code == null) res.status(401).json({msg: "Ingresa el número telefónico y el codigo del pais", attribute: ['code', 'phone']});
         response = await pool.query(`SELECT client_id, avatar, first_name, last_name FROM "Client"
-        WHERE phone=$1 AND code=$2 LIMIT 1;
+        WHERE phone=$1 AND code=$2;
         `, [phone, code]);
     }
   
@@ -73,7 +73,7 @@ export const startSessionEmployee = async (req: Request, res: Response) => {
 
 };
 
-export const userAllEmployeee = async (req: Request, res: Response) => {
+export const userAllEmployee = async (req: Request, res: Response) => {
     try {
         let Query = `SELECT id, employee_id, shopping_id, first_name, last_name, phone, email, "password", create_at, update_at
         FROM "Employes"
