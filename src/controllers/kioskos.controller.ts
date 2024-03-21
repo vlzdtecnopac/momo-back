@@ -182,13 +182,13 @@ export const desactiveAllKiosko = async (req: Request, res: Response) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { shopping_id, state } = req.body;
+  const { shopping_id } = req.body;
   try {
 
     let kactives: string[] = [];
 
-    let Query = `SELECT * FROM "Kiosko" k WHERE k.shopping_id = $1 and k.state=$2`;
-    const response = await pool.query(Query, [shopping_id, state]);
+    let Query = `SELECT * FROM "Kiosko" k WHERE k.shopping_id = $1 and k.state=true`;
+    const response = await pool.query(Query, [shopping_id]);
 
     let QueryTwo = `UPDATE "Kiosko"
     SET  state=false, update_at=now()

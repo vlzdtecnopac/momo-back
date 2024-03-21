@@ -30,8 +30,7 @@ router.put("/:kiosko_id", [validateJWT,
 ], KioskoController.updateKiosko);
 
 router.post("/desactive_all_kioskos", [validateJWT, 
-  check("shopping_id").notEmpty().withMessage("Ingresa el ID Shopping."),
-  check("state").isBoolean().trim().withMessage("Ingrese el estado Kiosko.")
+  check("shopping_id").notEmpty().withMessage("Ingresa el ID Shopping.")
 ], KioskoController.desactiveAllKiosko)
 
 export default router;
