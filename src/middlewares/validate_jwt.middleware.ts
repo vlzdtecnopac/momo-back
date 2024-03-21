@@ -41,7 +41,7 @@ const validateJWT = async (req: Request, res: Response, next: NextFunction) => {
 
     } catch (e) {
         loggsConfig.error(`${e}`);
-        return res.status(500).json(e);
+        return res.status(401).json(e);
     }
 
 
