@@ -13,18 +13,18 @@ const saltRounds = 10;
 export const startSessionClient = async (req: Request, res: Response) => {
     const { email, phone, code } = req.body;
     let response;
-    if(req.body.hasOwnProperty("email")){
-        if(email == null) res.status(401).json({msg: "Ingresa el correo electrónico", attribute: 'email'});
+    if (req.body.hasOwnProperty("email")) {
+        if (email == null) res.status(401).json({ msg: "Ingresa el correo electrónico", attribute: 'email' });
         response = await pool.query(`SELECT client_id, avatar, first_name, last_name FROM "Client"
         WHERE email=$1;
         `, [email]);
-    }else{
-        if(phone == null || code == null) res.status(401).json({msg: "Ingresa el número telefónico y el codigo del pais", attribute: ['code', 'phone']});
+    } else {
+        if (phone == null || code == null) res.status(401).json({ msg: "Ingresa el número telefónico y el codigo del pais", attribute: ['code', 'phone'] });
         response = await pool.query(`SELECT client_id, avatar, first_name, last_name FROM "Client"
         WHERE phone=$1 AND code=$2;
         `, [phone, code]);
     }
-  
+
     if (response.rows[0] == undefined || response.rows[0] == null) {
         return res.status(401).json({ msg: "No existe usuario." });
     }
@@ -183,11 +183,10 @@ export const userRegisterClient = async (req: Request, res: Response) => {
     try {
         const response = await pool.query(`
         INSERT INTO "Client"
-        (client_id, first_name, last_name, phone, email, country, code_country, state, create_at )
+        (client_id, first_name, last_name, phone, email, country, code, state, create_at )
         VALUES($1, $2, $3, $4, $5, $6, $7, $8,now()) RETURNING client_id, first_name, last_name, phone, phone, email;
         `, [uuidv4(), first_name, last_name, phone, email, country, code, true]);
 
-        console.log(response);
         return res.status(200).json(response.rows[0]);
 
     } catch (e) {
@@ -197,7 +196,7 @@ export const userRegisterClient = async (req: Request, res: Response) => {
 
 }
 
-export const updateToken = async (req: Request, res: Response,) => {
+export const updateToken = async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -225,6 +224,33 @@ export const updateToken = async (req: Request, res: Response,) => {
         loggsConfig.error(`${e}`);
         return res.status(500).json(e);
     }
+
+}
+
+export const getClients = async (req: Request, res: Response) => {
+    try {
+        let Query = `SELECT * FROM "Client"`;
+        const { shopping_id, client_id, email, phone } = req.query;
+
+        if (shopping_id != undefined || client_id != undefined || email != undefined || phone != undefined) {
+            const arrayWehere = [];
+            shopping_id == "" ? "" : arrayWehere.push({ "shopping_id": shopping_id });
+            client_id == "" ? "" : arrayWehere.push({ "client_id": client_id });
+            email == "" ? "" : arrayWehere.push({ "email": email });
+            phone == "" ? "" : arrayWehere.push({ "phone": phone });
+
+            const result_consult = arrayWehere.map(item => ` ${Object.keys(item)} = '${Object.values(item)}'`).join("OR");
+            Query += ` WHERE ${result_consult}`;
+        }
+        const response = await pool.query(Query);
+
+
+        return res.status(200).json(response.rows);
+    } catch (e) {
+        loggsConfig.error(`${e}`);
+        return res.status(500).json(e);
+    }
+
 
 }
 

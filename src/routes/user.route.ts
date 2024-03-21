@@ -39,6 +39,7 @@ router.post("/client/login", [validateJWT], UserController.startSessionClient);
 
 
 router.post("/client/register",[
+    validateJWT,
     check("first_name").notEmpty().withMessage("Ingresa el nombre completo."),
     check("last_name").notEmpty().withMessage("Ingresa el apellido completo."),
     check("phone").notEmpty().withMessage("Ingresa el número telefónico."),
@@ -46,6 +47,8 @@ router.post("/client/register",[
     check("country").notEmpty().withMessage("Ingresa la ciudad."),
     check("email").isEmail().withMessage("Ingresa correctamente el email").notEmpty().withMessage("Ingresa el correo electrónico."),
 ], UserController.userRegisterClient)
+
+router.get("/client", [validateJWT], UserController.getClients);
 
 router.post("/update_token", [  check("id").notEmpty().withMessage("Ingresa el ID usuario.")], UserController.updateToken);
 
