@@ -17,6 +17,10 @@ router.get("/", [validateJWT,
   query("state").optional()
 ], KioskoController.kioskos);
 
+router.post("/verify", [validateJWT,
+  check("kiosko_id").notEmpty().withMessage("Ingresa el ID Kiosko."),
+], KioskoController.getVerifyKiosko);
+
 router.get("/activate/", [validateJWT,
   query("shopping_id").notEmpty().withMessage("Ingresa el ID Shopping."),
   query("state").isBoolean().withMessage("Error no es boolean.")
