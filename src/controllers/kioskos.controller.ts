@@ -216,13 +216,12 @@ export const getVerifyKiosko = async (req: Request, res: Response) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-  
+
   const {kiosko_id} = req.body;
   try{
     let Query = `SELECT * FROM "Kiosko" k WHERE k.kiosko_id = $1`;
     const consult = await
     pool.query(Query, [kiosko_id]);
-
     return res.status(200).json(consult.rows);
   }catch(e){
     loggsConfig.error(`${e}`);
