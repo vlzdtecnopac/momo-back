@@ -14,12 +14,12 @@ export const startSessionClient = async (req: Request, res: Response) => {
     const { email, phone, code } = req.body;
     let response;
     if (req.body.hasOwnProperty("email")) {
-        if (email == null) res.status(401).json({ msg: "Ingresa el correo electrónico", attribute: 'email' });
+        if (email == null) res.status(401).json({ msg: "Ingresa el correo electrónico", attribute: "email" });
         response = await pool.query(`SELECT client_id, avatar, first_name, last_name FROM "Client"
         WHERE email=$1;
         `, [email]);
     } else {
-        if (phone == null || code == null) res.status(401).json({ msg: "Ingresa el número telefónico y el codigo del pais", attribute: ['code', 'phone'] });
+        if (phone == null || code == null) res.status(401).json({ msg: "Ingresa el número telefónico y el codigo del pais", attribute: ["code", "phone"] });
         response = await pool.query(`SELECT client_id, avatar, first_name, last_name FROM "Client"
         WHERE phone=$1 AND code=$2;
         `, [phone, code]);
@@ -30,7 +30,7 @@ export const startSessionClient = async (req: Request, res: Response) => {
     }
 
     return res.status(200).json(response.rows);
-}
+};
 
 export const startSessionEmployee = async (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -178,7 +178,7 @@ export const userRegisterClient = async (req: Request, res: Response) => {
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-    const { first_name, last_name, phone, code, country, email } = req.body
+    const { first_name, last_name, phone, code, country, email } = req.body;
 
     try {
         const response = await pool.query(`
@@ -194,7 +194,7 @@ export const userRegisterClient = async (req: Request, res: Response) => {
         return res.status(500).json(e);
     }
 
-}
+};
 
 export const updateToken = async (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -225,11 +225,11 @@ export const updateToken = async (req: Request, res: Response) => {
         return res.status(500).json(e);
     }
 
-}
+};
 
 export const getClients = async (req: Request, res: Response) => {
     try {
-        let Query = `SELECT * FROM "Client"`;
+        let Query = "SELECT * FROM \"Client\"";
         const { shopping_id, client_id, email, phone } = req.query;
 
         if (shopping_id != undefined || client_id != undefined || email != undefined || phone != undefined) {
@@ -252,5 +252,5 @@ export const getClients = async (req: Request, res: Response) => {
     }
 
 
-}
+};
 

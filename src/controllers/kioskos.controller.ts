@@ -185,17 +185,17 @@ export const desactiveAllKiosko = async (req: Request, res: Response) => {
   const { shopping_id } = req.body;
   try {
 
-    let kactives: string[] = [];
+    const kactives: string[] = [];
 
-    let Query = `SELECT * FROM "Kiosko" k WHERE k.shopping_id = $1 and k.state=true`;
+    const Query = "SELECT * FROM \"Kiosko\" k WHERE k.shopping_id = $1 and k.state=true";
     const response = await pool.query(Query, [shopping_id]);
 
-    let QueryTwo = `UPDATE "Kiosko"
+    const QueryTwo = `UPDATE "Kiosko"
     SET  state=false, update_at=now()
     WHERE kiosko_id=$1;
-    `
+    `;
     response.rows.map((kiosko_actives) => kactives.push(kiosko_actives.kiosko_id));
-    kactives.map(async (kiosko_id) => await pool.query(QueryTwo, [kiosko_id]))
+    kactives.map(async (kiosko_id) => await pool.query(QueryTwo, [kiosko_id]));
 
     const consult = await
       pool.query(`SELECT k.*, s.name_shopping FROM "Kiosko" k
@@ -209,4 +209,4 @@ ORDER BY k.id ASC`, [shopping_id]);
     loggsConfig.error(`${e}`);
     return res.status(500).json(e);
   }
-}
+};

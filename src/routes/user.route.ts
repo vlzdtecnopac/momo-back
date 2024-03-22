@@ -46,7 +46,7 @@ router.post("/client/register",[
     check("code").notEmpty().withMessage("Ingresa el prefijo telefónico."),
     check("country").notEmpty().withMessage("Ingresa la ciudad."),
     check("email").isEmail().withMessage("Ingresa correctamente el email").notEmpty().withMessage("Ingresa el correo electrónico."),
-], UserController.userRegisterClient)
+], UserController.userRegisterClient);
 
 router.get("/client", [validateJWT], UserController.getClients);
 
