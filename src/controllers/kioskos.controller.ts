@@ -202,7 +202,7 @@ export const desactiveAllKiosko = async (req: Request, res: Response) => {
 join "Shopping" s on s.shopping_id = k.shopping_id  WHERE k.shopping_id = $1
 ORDER BY k.id ASC`, [shopping_id]);
     Server.instance.io.emit("kiosko-socket", consult.rows);
-    Server.instance.io.emit("kiosko-verify-socket", response.rows[0]);
+    Server.instance.io.emit("kiosko-verify-socket", response.rows);
     return res.status(200).json(response.rows);
 
   } catch (e) {
