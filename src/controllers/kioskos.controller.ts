@@ -209,7 +209,7 @@ ORDER BY k.id ASC`, [shopping_id]);
     loggsConfig.error(`${e}`);
     return res.status(500).json(e);
   }
-}
+};
 
 export const getVerifyKiosko = async (req: Request, res: Response) => {
   const errors = validationResult(req);
@@ -219,7 +219,7 @@ export const getVerifyKiosko = async (req: Request, res: Response) => {
 
   const {kiosko_id} = req.body;
   try{
-    let Query = `SELECT * FROM "Kiosko" k WHERE k.kiosko_id = $1`;
+    const Query = "SELECT * FROM \"Kiosko\" k WHERE k.kiosko_id = $1";
     const consult = await
     pool.query(Query, [kiosko_id]);
     return res.status(200).json(consult.rows);
@@ -227,4 +227,4 @@ export const getVerifyKiosko = async (req: Request, res: Response) => {
     loggsConfig.error(`${e}`);
     return res.status(500).json(e);
   }
-}
+};
