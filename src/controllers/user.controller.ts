@@ -64,6 +64,7 @@ export const startSessionEmployee = async (req: Request, res: Response) => {
                 return res.status(200).json(respJson);
             } else {
                 loggsConfig.error("Login failed. Incorrect password.");
+                return
             }
         });
     } catch (e) {
